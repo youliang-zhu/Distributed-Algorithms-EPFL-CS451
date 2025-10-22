@@ -1,4 +1,4 @@
-#include "udp_socket.hpp"
+#include "network/udp_socket.hpp"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -20,7 +20,7 @@ UDPSocket::UDPSocket(uint16_t port) : port_(port)
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
-    if (bind(socket_fd_, (sockaddr*)&addr, sizeof(addr)) < 0) 
+    if (bind(socket_fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) 
     {
         close(socket_fd_);
         throw std::runtime_error("Failed to bind socket");
@@ -48,8 +48,8 @@ void UDPSocket::send(const std::string& ip, uint16_t port, const std::vector<uin
     }
     
     ssize_t sent = sendto(socket_fd_, data.data(), data.size(), 0,
-                          (sockaddr*)&dest_addr, sizeof(dest_addr));
-    
+                          reinterpret_cast<sockaddr*>(&dest_addr), sizeof(dest_addr));
+
     if (sent < 0) {
         throw std::runtime_error("Failed to send data");
     }
@@ -62,7 +62,8 @@ std::tuple<std::vector<uint8_t>, std::string, uint16_t> UDPSocket::receive()
     socklen_t addr_len = sizeof(sender_addr);
     
     ssize_t received = recvfrom(socket_fd_, buffer.data(), buffer.size(), 0,
-                                (sockaddr*)&sender_addr, &addr_len);
+                                reinterpret_cast<sockaddr*>(&sender_addr), &addr_len);
+
     
     if (received < 0) {
         throw std::runtime_error("Failed to receive data");

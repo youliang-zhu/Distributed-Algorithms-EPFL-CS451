@@ -18,9 +18,22 @@ int main(int argc, char** argv)
     if (config.getType() == ConfigType::PERFECT_LINK) 
     {
       auto pl_config = config.getPerfectLinkConfig();
+
+      // Convert Parser::Host to my types Host
+      auto parser_hosts = parser.hosts();
+      std::vector<Host> hosts;
+      for (const auto& ph : parser_hosts) 
+      {
+          hosts.emplace_back(
+              static_cast<uint32_t>(ph.id),
+              ph.ipReadable(),
+              ph.portReadable()
+          );
+      }
+
       milestone1::PerfectLinkApp app(
-          parser.id(),
-          parser.hosts(),
+          static_cast<uint32_t>(parser.id()),
+          hosts,
           pl_config.m,
           pl_config.receiver_id,
           parser.outputPath()

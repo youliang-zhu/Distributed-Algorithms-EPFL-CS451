@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "common/config.hpp"
 #include <vector>
 #include <fstream>
 #include <sstream>

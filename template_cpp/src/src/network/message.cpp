@@ -1,11 +1,11 @@
-#include "message.hpp"
+#include "network/message.hpp"
 #include <cstring>
 
 static void write_uint32(std::vector<uint8_t>& buffer, uint32_t value) {
-    buffer.push_back((value >> 24) & 0xFF);
-    buffer.push_back((value >> 16) & 0xFF);
-    buffer.push_back((value >> 8) & 0xFF);
-    buffer.push_back(value & 0xFF);
+    buffer.push_back(static_cast<uint8_t>((value >> 24) & 0xFF));
+    buffer.push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
+    buffer.push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
+    buffer.push_back(static_cast<uint8_t>(value & 0xFF));
 }
 static uint32_t read_uint32(const std::vector<uint8_t>& buffer, size_t& pos) {
     uint32_t value = 0;

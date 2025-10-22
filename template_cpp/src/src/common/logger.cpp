@@ -18,27 +18,47 @@ void Logger::logBroadcast(uint32_t seq_number)
     //lock_guard 的生命周期和 logBroadcast 函数的局部作用域绑定。当函数执行完毕并离开作用域，lock_guard 自动释放锁
     std::lock_guard<std::mutex> lock(mtx_);
     buffer_.push_back("b " + std::to_string(seq_number));
+    if (buffer_.size() >= FLUSH_THRESHOLD) 
+    {
+        flushInternal();
+    }
 }
 
 void Logger::logDelivery(uint32_t sender_id, uint32_t seq_number) 
 {
     std::lock_guard<std::mutex> lock(mtx_);
     buffer_.push_back("d " + std::to_string(sender_id) + " " + std::to_string(seq_number));
+    if (buffer_.size() >= FLUSH_THRESHOLD) 
+    {
+        flushInternal();
+    }
 }
 
 void Logger::flush() 
 {
     std::lock_guard<std::mutex> lock(mtx_);
-    if (buffer_.empty()) {
+    flushInternal();
+}
+
+void Logger::flushInternal() 
+{
+    if (buffer_.empty()) 
+    {
         return;
     }
-    std::ofstream file(output_path_);
-    if (!file.is_open()) {
+    
+    // 使用追加模式打开文件
+    std::ofstream file(output_path_, std::ios::app);
+    if (!file.is_open()) 
+    {
         return;
     }
-    for (const std::string& line : buffer_) {
+    
+    for (const std::string& line : buffer_) 
+    {
         file << line << "\n";
     }
+    
     file.close();
     buffer_.clear();
 }

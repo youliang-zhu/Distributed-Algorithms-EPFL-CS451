@@ -3,7 +3,8 @@
 #include <fstream>
 #include <sstream>
 
-Config Config::parse(const std::string& config_path) {
+Config Config::parse(const std::string& config_path) 
+{
     Config config;
     std::ifstream file(config_path);
     
@@ -19,9 +20,11 @@ Config Config::parse(const std::string& config_path) {
     uint32_t first_num, second_num, third_num;
     
     iss >> first_num;
-    if (iss >> second_num) {
+    if (iss >> second_num) 
+    {
         // Has at least two numbers
-        if (iss >> third_num) {
+        if (iss >> third_num) 
+        {
             // Three numbers: Lattice Agreement "p vs ds"
             config.type_  = ConfigType::LATTICE_AGREEMENT;
             config.lattice_agreement_config_.proposals = first_num;
@@ -50,7 +53,9 @@ Config Config::parse(const std::string& config_path) {
             config.perfect_link_config_.m = first_num;
             config.perfect_link_config_.receiver_id = second_num;
         }
-    } else {
+    } 
+    else 
+    {
         // One number: FIFO Broadcast "m"
         config.type_ = ConfigType::FIFO_BROADCAST;
         config.fifo_broadcast_config_.m = first_num;

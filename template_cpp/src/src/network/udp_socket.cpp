@@ -11,7 +11,8 @@ UDPSocket::UDPSocket(uint16_t port) : port_(port)
 {
     // Create UDP socket
     socket_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
-    if (socket_fd_ < 0) {
+    if (socket_fd_ < 0) 
+    {
         throw std::runtime_error("Failed to create socket");
     }
     // Bind to port
@@ -64,11 +65,10 @@ std::tuple<std::vector<uint8_t>, std::string, uint16_t> UDPSocket::receive()
     ssize_t received = recvfrom(socket_fd_, buffer.data(), buffer.size(), 0,
                                 reinterpret_cast<sockaddr*>(&sender_addr), &addr_len);
 
-    
-    if (received < 0) {
+    if (received < 0) 
+    {
         throw std::runtime_error("Failed to receive data");
     }
-    
     buffer.resize(received);
     
     //sender IP and port

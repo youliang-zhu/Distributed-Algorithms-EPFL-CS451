@@ -1,4 +1,5 @@
 #include "perfectlink/perfect_link_app.hpp"
+#include <iostream> 
 #include <algorithm>
 
 namespace milestone1 {
@@ -11,48 +12,58 @@ Sender::Sender(UDPSocket* socket, uint32_t my_id, const Host& receiver, Logger* 
     : socket_(socket), my_id_(my_id), receiver_(receiver), logger_(logger), running_(false) {
 }
 
-Sender::~Sender() {
+Sender::~Sender() 
+{
     stop();
 }
 
-void Sender::start() {
+void Sender::start() 
+{
     running_ = true;
     send_thread_ = std::thread(&Sender::sendLoop, this);
 }
 
-void Sender::stop() {
+void Sender::stop() 
+{
     running_ = false;
-    if (send_thread_.joinable()) {
+    if (send_thread_.joinable()) 
+    {
         send_thread_.join();
     }
 }
 
-void Sender::send(uint32_t seq_number) {
+void Sender::send(uint32_t seq_number) 
+{
     std::lock_guard<std::mutex> lock(mtx_);
     pending_queue_.push(seq_number);
     logger_->logBroadcast(seq_number);
 }
 
-void Sender::handleAck(const std::vector<uint32_t>& ack_seqs) {
+void Sender::handleAck(const std::vector<uint32_t>& ack_seqs) 
+{
     std::lock_guard<std::mutex> lock(mtx_);
-    for (uint32_t seq : ack_seqs) {
+    for (uint32_t seq : ack_seqs) 
+    {
         unacked_messages_.erase(seq);
     }
 }
 
-void Sender::sendLoop() {
-    while (running_) {
+void Sender::sendLoop() 
+{
+    while (running_) 
+    {
         sendNewMessages();
         retransmitTimedOut();
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
-void Sender::sendNewMessages() {
+void Sender::sendNewMessages() 
+{
     std::lock_guard<std::mutex> lock(mtx_);
-    
     std::vector<uint32_t> batch;
-    while (!pending_queue_.empty() && batch.size() < MAX_BATCH_SIZE) {
+    while (!pending_queue_.empty() && batch.size() < MAX_BATCH_SIZE) 
+    {
         uint32_t seq = pending_queue_.front();
         pending_queue_.pop();
         
@@ -62,7 +73,8 @@ void Sender::sendNewMessages() {
         unacked_messages_[seq] = SentMessage(seq, std::chrono::steady_clock::now());
     }
     
-    if (!batch.empty()) {
+    if (!batch.empty()) 
+    {
         Packet packet = Packet::createDataPacket(my_id_, batch);
         std::vector<uint8_t> bytes = packet.serialize();
         socket_->send(receiver_.ip, receiver_.port, bytes);
@@ -130,6 +142,11 @@ void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16
                 {
                     delivered.pop_front();
                 }
+                std::cout << "NEW: d " << sender_id << " " << seq << std::endl;
+            }
+            else 
+            {
+                std::cout << "DUP: d " << sender_id << " " << seq << " (already delivered)" << std::endl;
             }
         }
 
@@ -181,28 +198,29 @@ void Receiver::flushAcks(const std::string& sender_ip, uint16_t sender_port)
 
 PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
                                uint32_t m, uint32_t receiver_id, const std::string& output_path)
-    : my_id_(my_id), hosts_(hosts), m_(m), receiver_id_(receiver_id), running_(false) {
-    
-    // Find my port
+    : my_id_(my_id), hosts_(hosts), m_(m), receiver_id_(receiver_id), running_(false) 
+{
     Host my_host = findHost(my_id_);
     socket_ = new UDPSocket(my_host.port);
-    
-    // Create logger
     logger_ = new Logger(output_path);
     
-    // Create sender and receiver
-    if (my_id_ != receiver_id_) {
+    //create sender and receiver
+    if (my_id_ != receiver_id_) 
+    {
         // I am a sender
         Host receiver_host = findHost(receiver_id_);
         sender_ = new Sender(socket_, my_id_, receiver_host, logger_);
-    } else {
+    } 
+    else 
+    {
         sender_ = nullptr;
     }
     
     receiver_ = new Receiver(socket_, logger_);
 }
 
-PerfectLinkApp::~PerfectLinkApp() {
+PerfectLinkApp::~PerfectLinkApp() 
+{
     shutdown();
     
     delete receiver_;
@@ -211,20 +229,27 @@ PerfectLinkApp::~PerfectLinkApp() {
     delete socket_;
 }
 
-void PerfectLinkApp::run() {
+void PerfectLinkApp::run() 
+{
     running_ = true;
-    
-    // Start receive thread (all processes need this)
     receive_thread_ = std::thread(&PerfectLinkApp::receiveLoop, this);
     
-    // If I am a sender, start sending
-    if (sender_ != nullptr) {
+    //if I am a sender
+    if (sender_ != nullptr) 
+    {
         sender_->start();
-        
-        // Generate and send m messages
-        for (uint32_t seq = 1; seq <= m_; seq++) {
+        for (uint32_t seq = 1; seq <= m_; seq++) 
+        {
             sender_->send(seq);
         }
+
+        std::cout << "Process " << my_id_ << ": Sent " << m_ << " messages to process " << receiver_id_ << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    } 
+    else 
+    {
+        std::cout << "Process " << my_id_ << ": Ready to receive messages" << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 }
 
@@ -242,25 +267,32 @@ void PerfectLinkApp::shutdown()
     logger_->flush();
 }
 
-void PerfectLinkApp::receiveLoop() {
-    while (running_) {
-        try {
+void PerfectLinkApp::receiveLoop() 
+{
+    while (running_) 
+    {
+        try 
+        {
             auto [data, sender_ip, sender_port] = socket_->receive();
-            
             Packet packet = Packet::deserialize(data);
             
-            if (packet.type == MessageType::PERFECT_LINK_DATA) {
-                // Data packet -> handle by receiver
+            if (packet.type == MessageType::PERFECT_LINK_DATA) 
+            {
                 receiver_->handle(packet, sender_ip, sender_port);
-            } else if (packet.type == MessageType::PERFECT_LINK_ACK) {
-                // ACK packet -> handle by sender
-                if (sender_ != nullptr) {
+            } 
+            else if (packet.type == MessageType::PERFECT_LINK_ACK) 
+            {
+                if (sender_ != nullptr) 
+                {
                     sender_->handleAck(packet.seq_numbers);
                 }
             }
-        } catch (const std::exception& e) {
+        } 
+        catch (const std::exception& e) 
+        {
             // Socket might throw when stopping
-            if (running_) {
+            if (running_) 
+            {
                 // Only print error if we're still supposed to be running
                 // Otherwise it's expected (socket closed during shutdown)
             }
@@ -269,14 +301,16 @@ void PerfectLinkApp::receiveLoop() {
     }
 }
 
-Host PerfectLinkApp::findHost(uint32_t id) const {
-    for (const Host& host : hosts_) {
-        if (host.id == id) {
+Host PerfectLinkApp::findHost(uint32_t id) const 
+{
+    for (const Host& host : hosts_) 
+    {
+        if (host.id == id) 
+        {
             return host;
         }
     }
-    // Should never happen if hosts file is correct
     return Host();
 }
 
-} // namespace milestone1
+}

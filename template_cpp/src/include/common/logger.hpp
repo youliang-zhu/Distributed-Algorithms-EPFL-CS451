@@ -22,7 +22,7 @@ private:
 
     std::string output_path_;
     std::vector<std::string> buffer_;
-    static constexpr size_t FLUSH_THRESHOLD = 1000; 
+    static constexpr size_t FLUSH_THRESHOLD = 5; 
     // 创建锁变量
     std::mutex mtx_;
     

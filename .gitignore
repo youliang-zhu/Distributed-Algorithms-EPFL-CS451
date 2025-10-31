@@ -2,3 +2,5 @@
 .vscode
 packages.microsoft.gpg
 vscode_old.deb
+/template_cpp/src/test_common.cpp
+/template_cpp/src/test_network.cpp

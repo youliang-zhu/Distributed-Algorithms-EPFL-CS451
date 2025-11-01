@@ -68,10 +68,10 @@ public:
     Receiver(UDPSocket* socket, Logger* logger);
     
     void handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
+    void flushAllPendingAcks(); 
 
 private:
     void flushAcks(const std::string& sender_ip, uint16_t sender_port);
-    void flushAllPendingAcks(); 
 
     UDPSocket* socket_;
     Logger* logger_;
@@ -109,8 +109,6 @@ private:
     
     std::thread receive_thread_;
     std::atomic<bool> running_;
-    std::condition_variable wait_cv_;
-    std::mutex wait_mutex_;   
     
     void receiveLoop();
     Host findHost(uint32_t id) const;

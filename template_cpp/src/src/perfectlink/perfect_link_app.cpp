@@ -270,7 +270,6 @@ void PerfectLinkApp::run()
     running_ = true;
     receive_thread_ = std::thread(&PerfectLinkApp::receiveLoop, this);
     
-    // 如果是sender
     if (sender_ != nullptr) 
     {
         sender_->start();
@@ -279,27 +278,18 @@ void PerfectLinkApp::run()
             sender_->send(seq);
         }
         std::cout << "Process " << my_id_ << ": Sent " << m_ << " messages to process " << receiver_id_ << std::endl;
-        
-        // unique_lock是一个RAII锁管理器，创建unique_lock对象并立即锁定wait_mutex_变量
-        std::unique_lock<std::mutex> lock(wait_mutex_);
-        wait_cv_.wait(lock, [this]() { return !running_; });
     } 
     else 
     {
-        // 如果是receiver
         std::cout << "Process " << my_id_ << ": Ready to receive messages" << std::endl;
-        
-        // unique_lock是一个RAII锁管理器，创建unique_lock对象并立即锁定wait_mutex_变量
-        std::unique_lock<std::mutex> lock(wait_mutex_);
-        wait_cv_.wait(lock, [this]() { return !running_; });
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // 直接返回，不等待
 }
 
 void PerfectLinkApp::shutdown() 
 {
-    running_ = false;
-    wait_cv_.notify_all();
-    
+    running_ = false;    
     if (sender_ != nullptr) 
     {
         sender_->stop();

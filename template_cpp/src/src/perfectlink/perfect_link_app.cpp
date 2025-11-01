@@ -277,6 +277,7 @@ void PerfectLinkApp::run()
         {
             sender_->send(seq);
         }
+        logger_->flush();
         std::cout << "Process " << my_id_ << ": Sent " << m_ << " messages to process " << receiver_id_ << std::endl;
     } 
     else 

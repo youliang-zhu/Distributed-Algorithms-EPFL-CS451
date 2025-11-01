@@ -36,6 +36,7 @@ UDPSocket::~UDPSocket()
     }
 }
 
+// 输入目标ip，端口，数据，使用sendto发送数据，不可靠传输，立即返回结果
 void UDPSocket::send(const std::string& ip, uint16_t port, const std::vector<uint8_t>& data) 
 {
     sockaddr_in dest_addr;
@@ -56,6 +57,7 @@ void UDPSocket::send(const std::string& ip, uint16_t port, const std::vector<uin
     }
 }
 
+// 创建一个buffer，用recvfrom阻塞接受数据，返回接收到的数据以及发送者的IP和端口
 std::tuple<std::vector<uint8_t>, std::string, uint16_t> UDPSocket::receive() 
 {
     std::vector<uint8_t> buffer(65536);

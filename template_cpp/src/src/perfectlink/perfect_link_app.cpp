@@ -75,8 +75,11 @@ void Sender::sendNewMessages()
     
     if (!batch.empty()) 
     {
+        // 创建一个包含多个序列号的数据包
         Packet packet = Packet::createDataPacket(my_id_, batch);
+        // 序列化变为字节流
         std::vector<uint8_t> bytes = packet.serialize();
+        // 输入目标ip，端口，数据，使用sendto发送数据，不可靠传输，立即返回结果，udp传输
         socket_->send(receiver_.ip, receiver_.port, bytes);
     }
 }
@@ -192,6 +195,39 @@ void Receiver::flushAcks(const std::string& sender_ip, uint16_t sender_port)
     }
 }
 
+void Receiver::flushAllPendingAcks() 
+{
+    std::lock_guard<std::mutex> lock(mtx_);
+    
+    // 遍历所有pending ACKs并发送
+    for (auto& [key, ack_list] : pending_acks_) 
+    {
+        if (ack_list.empty()) 
+        {
+            continue;
+        }
+        
+        // 解析key获取IP和port
+        size_t colon_pos = key.find(':');
+        std::string sender_ip = key.substr(0, colon_pos);
+        uint16_t sender_port = static_cast<uint16_t>(
+            std::stoul(key.substr(colon_pos + 1))
+        );
+        
+        // 发送所有pending ACKs
+        while (!ack_list.empty()) 
+        {
+            size_t batch_size = std::min(ack_list.size(), MAX_ACKS_PER_PACKET);
+            std::vector<uint32_t> batch(ack_list.begin(), ack_list.begin() + batch_size);
+            Packet ack = Packet::createAckPacket(batch);
+            std::vector<uint8_t> ack_bytes = ack.serialize();
+            socket_->send(sender_ip, sender_port, ack_bytes);
+            ack_list.erase(ack_list.begin(), ack_list.begin() + batch_size);
+        }
+    }
+    pending_acks_.clear();
+}
+
 // ============================================================================
 // PerfectLinkApp Implementation
 // ============================================================================
@@ -234,7 +270,7 @@ void PerfectLinkApp::run()
     running_ = true;
     receive_thread_ = std::thread(&PerfectLinkApp::receiveLoop, this);
     
-    //if I am a sender
+    // 如果是sender
     if (sender_ != nullptr) 
     {
         sender_->start();
@@ -242,20 +278,28 @@ void PerfectLinkApp::run()
         {
             sender_->send(seq);
         }
-
         std::cout << "Process " << my_id_ << ": Sent " << m_ << " messages to process " << receiver_id_ << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        
+        // unique_lock是一个RAII锁管理器，创建unique_lock对象并立即锁定wait_mutex_变量
+        std::unique_lock<std::mutex> lock(wait_mutex_);
+        wait_cv_.wait(lock, [this]() { return !running_; });
     } 
     else 
     {
+        // 如果是receiver
         std::cout << "Process " << my_id_ << ": Ready to receive messages" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        
+        // unique_lock是一个RAII锁管理器，创建unique_lock对象并立即锁定wait_mutex_变量
+        std::unique_lock<std::mutex> lock(wait_mutex_);
+        wait_cv_.wait(lock, [this]() { return !running_; });
     }
 }
 
 void PerfectLinkApp::shutdown() 
 {
     running_ = false;
+    wait_cv_.notify_all();
+    
     if (sender_ != nullptr) 
     {
         sender_->stop();
@@ -264,6 +308,7 @@ void PerfectLinkApp::shutdown()
     {
         receive_thread_.join();
     }
+    receiver_->flushAllPendingAcks();
     logger_->flush();
 }
 
@@ -273,9 +318,10 @@ void PerfectLinkApp::receiveLoop()
     {
         try 
         {
+            // 接收数据包并反序列化，auto 自动推导类型并解包tuple，receive返回值是一个tuple
             auto [data, sender_ip, sender_port] = socket_->receive();
+            // 仅在receiveLoop中使用反序列化，把多个数据包的字节流恢复为Packet结构
             Packet packet = Packet::deserialize(data);
-            
             if (packet.type == MessageType::PERFECT_LINK_DATA) 
             {
                 receiver_->handle(packet, sender_ip, sender_port);

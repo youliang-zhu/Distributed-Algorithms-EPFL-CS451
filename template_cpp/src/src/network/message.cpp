@@ -31,6 +31,7 @@ std::vector<uint8_t> Packet::serialize() const
     return buffer;
 }
 
+// packet的原始赋值通过反序列化函数实现
 Packet Packet::deserialize(const std::vector<uint8_t>& data) 
 {
     Packet packet;

@@ -71,6 +71,7 @@ public:
 
 private:
     void flushAcks(const std::string& sender_ip, uint16_t sender_port);
+    void flushAllPendingAcks(); 
 
     UDPSocket* socket_;
     Logger* logger_;
@@ -81,8 +82,8 @@ private:
 
     std::map<std::string, std::vector<uint32_t>> pending_acks_;
     std::chrono::steady_clock::time_point last_ack_time_;
-    static constexpr std::chrono::milliseconds ACK_BATCH_INTERVAL{50};
-    static constexpr size_t MAX_ACKS_PER_PACKET = 8;
+    static constexpr std::chrono::milliseconds ACK_BATCH_INTERVAL{200};
+    static constexpr size_t MAX_ACKS_PER_PACKET = 64;
 };
 
 class PerfectLinkApp 
@@ -108,6 +109,8 @@ private:
     
     std::thread receive_thread_;
     std::atomic<bool> running_;
+    std::condition_variable wait_cv_;
+    std::mutex wait_mutex_;   
     
     void receiveLoop();
     Host findHost(uint32_t id) const;

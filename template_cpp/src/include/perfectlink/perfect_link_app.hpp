@@ -66,12 +66,16 @@ class Receiver
 {
 public:
     Receiver(UDPSocket* socket, Logger* logger);
+    ~Receiver();
     
+    void start();
+    void stop();
     void handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
     void flushAllPendingAcks(); 
 
 private:
     void flushAcks(const std::string& sender_ip, uint16_t sender_port);
+    void flushLoop();
 
     UDPSocket* socket_;
     Logger* logger_;
@@ -82,8 +86,12 @@ private:
 
     std::map<std::string, std::vector<uint32_t>> pending_acks_;
     std::chrono::steady_clock::time_point last_ack_time_;
-    static constexpr std::chrono::milliseconds ACK_BATCH_INTERVAL{200};
+    static constexpr std::chrono::milliseconds ACK_FLUSH_INTERVAL{200};
     static constexpr size_t MAX_ACKS_PER_PACKET = 64;
+
+    // 定期flush线程
+    std::thread flush_thread_;
+    std::atomic<bool> flush_running_;
 };
 
 class PerfectLinkApp 

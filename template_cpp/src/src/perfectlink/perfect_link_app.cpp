@@ -114,7 +114,27 @@ void Sender::retransmitTimedOut() {
 // ============================================================================
 
 Receiver::Receiver(UDPSocket* socket, Logger* logger)
-    : socket_(socket), logger_(logger), last_ack_time_(std::chrono::steady_clock::now()) {
+    : socket_(socket), logger_(logger), flush_running_(false) {
+}
+
+Receiver::~Receiver() 
+{
+    stop();
+}
+
+void Receiver::start() 
+{
+    flush_running_ = true;
+    flush_thread_ = std::thread(&Receiver::flushLoop, this);
+}
+
+void Receiver::stop() 
+{
+    flush_running_ = false;
+    if (flush_thread_.joinable()) 
+    {
+        flush_thread_.join();
+    }
 }
 
 void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port) 
@@ -159,14 +179,12 @@ void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16
         {
             pending_acks_[key].push_back(seq);
         }
-    }
-    
-    auto now = std::chrono::steady_clock::now();
-    std::string key = sender_ip + ":" + std::to_string(static_cast<unsigned int>(sender_port));
-    if (now - last_ack_time_ > ACK_BATCH_INTERVAL || pending_acks_[key].size() >= MAX_ACKS_PER_PACKET) 
-    {
-        flushAcks(sender_ip, sender_port);
-        last_ack_time_ = now;
+
+        // 如果ACK数量达到阈值，立即发送
+        if (pending_acks_[key].size() >= MAX_ACKS_PER_PACKET) 
+        {
+            flushAcks(sender_ip, sender_port);
+        }
     }
 }
 
@@ -192,6 +210,46 @@ void Receiver::flushAcks(const std::string& sender_ip, uint16_t sender_port)
         
         pending_acks_[key].erase(pending_acks_[key].begin(), 
                                   pending_acks_[key].begin() + batch_size);
+    }
+}
+
+void Receiver::flushLoop() 
+{
+    while (flush_running_) 
+    {
+        // 定期检查并发送所有pending ACKs
+        {
+            std::lock_guard<std::mutex> lock(mtx_);
+            
+            for (auto& [key, ack_list] : pending_acks_) 
+            {
+                if (ack_list.empty()) 
+                {
+                    continue;
+                }
+                
+                // 解析key获取IP和port
+                size_t colon_pos = key.find(':');
+                std::string sender_ip = key.substr(0, colon_pos);
+                uint16_t sender_port = static_cast<uint16_t>(
+                    std::stoul(key.substr(colon_pos + 1))
+                );
+                
+                // 发送所有pending ACKs
+                while (!ack_list.empty()) 
+                {
+                    size_t batch_size = std::min(ack_list.size(), MAX_ACKS_PER_PACKET);
+                    std::vector<uint32_t> batch(ack_list.begin(), ack_list.begin() + batch_size);
+                    Packet ack = Packet::createAckPacket(batch);
+                    std::vector<uint8_t> ack_bytes = ack.serialize();
+                    socket_->send(sender_ip, sender_port, ack_bytes);
+                    ack_list.erase(ack_list.begin(), ack_list.begin() + batch_size);
+                }
+            }
+        }
+        
+        // 等待一段时间再继续
+        std::this_thread::sleep_for(ACK_FLUSH_INTERVAL);
     }
 }
 
@@ -269,6 +327,9 @@ void PerfectLinkApp::run()
 {
     running_ = true;
     receive_thread_ = std::thread(&PerfectLinkApp::receiveLoop, this);
+
+    // 启动Receiver的定期flush线程
+    receiver_->start();
     
     if (sender_ != nullptr) 
     {
@@ -290,7 +351,13 @@ void PerfectLinkApp::run()
 
 void PerfectLinkApp::shutdown() 
 {
-    running_ = false;    
+    receiver_->flushAllPendingAcks(); 
+    logger_->flush();  
+    running_ = false;
+    
+    running_ = false; 
+    receiver_->stop();
+       
     if (sender_ != nullptr) 
     {
         sender_->stop();
@@ -299,8 +366,6 @@ void PerfectLinkApp::shutdown()
     {
         receive_thread_.join();
     }
-    receiver_->flushAllPendingAcks();
-    logger_->flush();
 }
 
 void PerfectLinkApp::receiveLoop() 

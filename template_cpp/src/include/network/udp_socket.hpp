@@ -17,6 +17,7 @@ public:
     std::tuple<std::vector<uint8_t>, std::string, uint16_t> receive();
     
     uint16_t getPort() const { return port_; }
+    int getFd() const { return socket_fd_; }
 
 private:
     int socket_fd_;

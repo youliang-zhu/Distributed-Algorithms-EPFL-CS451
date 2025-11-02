@@ -1,0 +1,26 @@
+[DEBUG] waitUntilAllAcked loop #1: pending=80, unacked=0
+[DEBUG] sendLoop #1: pending=80, unacked=0
+[DEBUG] sendNewMessages batch #1: size=32, first_seq=1, last_seq=32, remaining_pending=48, total_unacked=32
+[DEBUG]   Sending packet: 134 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] receiveLoop started
+[DEBUG] handleAck: received ACK for 32 messages, first=1, last=32, unacked_before=32, removed=32, unacked_after=0
+[DEBUG] sendNewMessages batch #2: size=32, first_seq=33, last_seq=64, remaining_pending=16, total_unacked=32
+[DEBUG]   Sending packet: 134 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] handleAck: received ACK for 32 messages, first=33, last=64, unacked_before=32, removed=32, unacked_after=0
+[DEBUG] sendNewMessages batch #3: size=16, first_seq=65, last_seq=80, remaining_pending=0, total_unacked=16
+[DEBUG]   Sending packet: 70 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] handleAck: received ACK for 16 messages, first=65, last=80, unacked_before=16, removed=16, unacked_after=0
+[DEBUG] waitUntilAllAcked exiting after 1 iterations
+Process 1: Sent 80 messages to process 3
+[DEBUG] Entering signal wait loop...
+[DEBUG] Signal wait loop iteration #1
+[DEBUG] Signal wait loop iteration #11
+[DEBUG] sendLoop #101: pending=0, unacked=0
+[DEBUG] Signal wait loop iteration #21
+[DEBUG] sendLoop #201: pending=0, unacked=0
+[DEBUG] Signal received, exiting wait loop after 29 iterations
+Process 1: Task completed, shutting down...
+[DEBUG] sendLoop exiting after 270 iterations

@@ -2,6 +2,8 @@
 #include <iostream> 
 #include <algorithm>
 #include <type_traits>
+#include <unordered_map>
+
 
 namespace milestone1 {
 
@@ -43,9 +45,27 @@ void Sender::send(uint32_t seq_number)
 void Sender::handleAck(const std::vector<uint32_t>& ack_seqs) 
 {
     std::lock_guard<std::mutex> lock(mtx_);
+    
+    if (!ack_seqs.empty()) {
+        std::cout << "[DEBUG] handleAck: received ACK for " << ack_seqs.size() 
+                  << " messages, first=" << ack_seqs.front()
+                  << ", last=" << ack_seqs.back()
+                  << ", unacked_before=" << unacked_messages_.size();
+    }
+    
+    int removed_count = 0;
     for (uint32_t seq : ack_seqs) 
     {
-        unacked_messages_.erase(seq);
+        auto it = unacked_messages_.find(seq);
+        if (it != unacked_messages_.end()) {
+            unacked_messages_.erase(it);
+            removed_count++;
+        }
+    }
+    
+    if (!ack_seqs.empty()) {
+        std::cout << ", removed=" << removed_count
+                  << ", unacked_after=" << unacked_messages_.size() << std::endl;
     }
 }
 
@@ -57,26 +77,48 @@ bool Sender::allMessagesAcked() const
 
 void Sender::waitUntilAllAcked() 
 {
+    int loop_count = 0;
     while (running_ && !allMessagesAcked()) 
     {
+        loop_count++;
+        if (loop_count % 20 == 1) {  // Print every second (20 * 50ms)
+            std::lock_guard<std::mutex> lock(mtx_);
+            std::cout << "[DEBUG] waitUntilAllAcked loop #" << loop_count 
+                      << ": pending=" << pending_queue_.size() 
+                      << ", unacked=" << unacked_messages_.size() << std::endl;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
+    std::cout << "[DEBUG] waitUntilAllAcked exiting after " << loop_count << " iterations" << std::endl;
 }
 
 void Sender::sendLoop() 
 {
+    int loop_count = 0;
     while (running_) 
     {
+        loop_count++;
+        if (loop_count % 100 == 1) {  // 每秒打印一次 (100 * 10ms)
+            std::lock_guard<std::mutex> lock(mtx_);
+            std::cout << "[DEBUG] sendLoop #" << loop_count 
+                      << ": pending=" << pending_queue_.size() 
+                      << ", unacked=" << unacked_messages_.size() << std::endl;
+        }
         sendNewMessages();
         retransmitTimedOut();
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+    std::cout << "[DEBUG] sendLoop exiting after " << loop_count << " iterations" << std::endl;
 }
 
 void Sender::sendNewMessages() 
 {
     std::lock_guard<std::mutex> lock(mtx_);
     std::vector<uint32_t> batch;
+    
+    // 记录batch数量
+    static int batch_count = 0;
+    
     while (!pending_queue_.empty() && batch.size() < MAX_BATCH_SIZE) 
     {
         uint32_t seq = pending_queue_.front();
@@ -90,12 +132,28 @@ void Sender::sendNewMessages()
     
     if (!batch.empty()) 
     {
+        batch_count++;
+        std::cout << "[DEBUG] sendNewMessages batch #" << batch_count 
+                  << ": size=" << batch.size() 
+                  << ", first_seq=" << batch.front() 
+                  << ", last_seq=" << batch.back()
+                  << ", remaining_pending=" << pending_queue_.size()
+                  << ", total_unacked=" << unacked_messages_.size() << std::endl;
+        
         // 创建一个包含多个序列号的数据包
         Packet packet = Packet::createDataPacket(my_id_, batch);
         // 序列化变为字节流
         std::vector<uint8_t> bytes = packet.serialize();
+        
+        std::cout << "[DEBUG]   Sending packet: " << bytes.size() << " bytes" << std::endl;
+        
         // 输入目标ip，端口，数据，使用sendto发送数据，不可靠传输，立即返回结果，udp传输
-        socket_->send(receiver_.ip, receiver_.port, bytes);
+        try {
+            socket_->send(receiver_.ip, receiver_.port, bytes);
+            std::cout << "[DEBUG]   ✓ Send successful" << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "[DEBUG]   ✗ Send FAILED: " << e.what() << std::endl;
+        }
     }
 }
 
@@ -118,9 +176,19 @@ void Sender::retransmitTimedOut() {
     }
     
     if (!to_retransmit.empty()) {
+        std::cout << "[DEBUG] retransmitTimedOut: retransmitting " << to_retransmit.size() 
+                  << " messages, first_seq=" << to_retransmit.front()
+                  << ", last_seq=" << to_retransmit.back() << std::endl;
+        
         Packet packet = Packet::createDataPacket(my_id_, to_retransmit);
         std::vector<uint8_t> bytes = packet.serialize();
-        socket_->send(receiver_.ip, receiver_.port, bytes);
+        
+        try {
+            socket_->send(receiver_.ip, receiver_.port, bytes);
+            std::cout << "[DEBUG]   Retransmit sent: " << bytes.size() << " bytes" << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "[DEBUG]   Retransmit FAILED: " << e.what() << std::endl;
+        }
     }
 }
 
@@ -159,7 +227,15 @@ void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16
         return;
     }
     
+    static unsigned int packet_count = 0;
+    static std::unordered_map<uint32_t, unsigned int> delivery_count_per_sender;
+    
+    packet_count++;
     uint32_t sender_id = packet.sender_id;
+    
+    unsigned int new_deliveries = 0;
+    bool should_flush = false;
+    
     {
         // 锁定的局部作用域开始
         std::lock_guard<std::mutex> lock(mtx_);
@@ -171,7 +247,17 @@ void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16
             {
                 logger_->logDelivery(sender_id, seq);
                 delivered.insert(seq);
+                new_deliveries++;
+                delivery_count_per_sender[sender_id]++;
             }
+        }
+        
+        if (packet_count % 50 == 1 || new_deliveries > 0) {
+            std::cout << "[DEBUG] Receiver::handle packet #" << packet_count 
+                      << " from sender " << sender_id
+                      << ": received " << packet.seq_numbers.size() << " seqs"
+                      << ", new_deliveries=" << new_deliveries
+                      << ", total_from_sender=" << delivery_count_per_sender[sender_id] << std::endl;
         }
 
         // 创建一个sender字符串键，用于标识消息应该回复给谁, 将所有收到的序号加入待发送 ACK 队列
@@ -181,11 +267,19 @@ void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16
             pending_acks_[key].push_back(seq);
         }
 
-        // 如果ACK数量达到阈值，立即发送
+        //检查是否需要flush，但不在锁内调用
         if (pending_acks_[key].size() >= MAX_ACKS_PER_PACKET) 
         {
-            flushAcks(sender_ip, sender_port);
+            std::cout << "[DEBUG]   Triggering immediate ACK flush (threshold reached)" << std::endl;
+            should_flush = true;
         }
+    }
+    
+    // !!!critical change
+    //在锁外调用flushAcks，避免死锁
+    if (should_flush) 
+    {
+        flushAcks(sender_ip, sender_port);
     }
 }
 
@@ -199,6 +293,7 @@ void Receiver::flushAcks(const std::string& sender_ip, uint16_t sender_port)
         return;
     }
     
+    size_t total_acks_sent = 0;
     while (!pending_acks_[key].empty()) 
     {
         size_t batch_size = std::min(pending_acks_[key].size(), MAX_ACKS_PER_PACKET);
@@ -207,10 +302,20 @@ void Receiver::flushAcks(const std::string& sender_ip, uint16_t sender_port)
         
         Packet ack = Packet::createAckPacket(batch);
         std::vector<uint8_t> ack_bytes = ack.serialize();
-        socket_->send(sender_ip, sender_port, ack_bytes);
+        
+        try {
+            socket_->send(sender_ip, sender_port, ack_bytes);
+            total_acks_sent += batch_size;
+        } catch (const std::exception& e) {
+            std::cerr << "[DEBUG] ACK send FAILED: " << e.what() << std::endl;
+        }
         
         pending_acks_[key].erase(pending_acks_[key].begin(), 
                                   pending_acks_[key].begin() + batch_size);
+    }
+    
+    if (total_acks_sent > 0) {
+        std::cout << "[DEBUG] flushAcks: sent " << total_acks_sent << " ACKs to " << sender_ip << std::endl;
     }
 }
 
@@ -352,39 +457,55 @@ void PerfectLinkApp::run()
 
 void PerfectLinkApp::shutdown() 
 {
-    receiver_->flushAllPendingAcks(); 
-    logger_->flush();  
-    running_ = false;
+    // 停止 Receiver 的 flushLoop（周期性主动发送 ACK）
+    if (receiver_ != nullptr) 
+    {
+        receiver_->stop();
+    }
     
-    running_ = false; 
-    receiver_->stop();
-       
+    // 停止 Sender（不再发送数据包）
     if (sender_ != nullptr) 
     {
         sender_->stop();
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    running_ = false;
     if (receive_thread_.joinable()) 
     {
-        receive_thread_.join();
+        // !!!critical change
+        receive_thread_.detach();
     }
+    
+    // 最后 flush logger（只写文件，不发网络包）
+    logger_->flush();
 }
+
 
 void PerfectLinkApp::receiveLoop() 
 {
+    std::cout << "[DEBUG] receiveLoop started" << std::endl;
+    int packets_received = 0;
+    int data_packets = 0;
+    int ack_packets = 0;
+    
     while (running_) 
     {
         try 
         {
             // 接收数据包并反序列化，auto 自动推导类型并解包tuple，receive返回值是一个tuple
             auto [data, sender_ip, sender_port] = socket_->receive();
+            packets_received++;
+            
             // 仅在receiveLoop中使用反序列化，把多个数据包的字节流恢复为Packet结构
             Packet packet = Packet::deserialize(data);
             if (packet.type == MessageType::PERFECT_LINK_DATA) 
             {
+                data_packets++;
                 receiver_->handle(packet, sender_ip, sender_port);
             } 
             else if (packet.type == MessageType::PERFECT_LINK_ACK) 
             {
+                ack_packets++;
                 if (sender_ != nullptr) 
                 {
                     sender_->handleAck(packet.seq_numbers);
@@ -396,11 +517,15 @@ void PerfectLinkApp::receiveLoop()
             // Socket might throw when stopping
             if (running_) 
             {
-                std::cerr << "Error in receiveLoop: " << e.what() << std::endl;
+                std::cerr << "[DEBUG] Error in receiveLoop: " << e.what() << std::endl;
             }
             break;
         }
     }
+    
+    std::cout << "[DEBUG] receiveLoop exiting: total_packets=" << packets_received 
+              << ", data=" << data_packets 
+              << ", ack=" << ack_packets << std::endl;
 }
 
 Host PerfectLinkApp::findHost(uint32_t id) const 

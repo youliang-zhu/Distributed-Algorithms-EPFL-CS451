@@ -1,0 +1,18 @@
+Process 3: Ready to receive messages
+[DEBUG] receiveLoop started
+[DEBUG] Entering signal wait loop...
+[DEBUG] Signal wait loop iteration #1
+[DEBUG] Receiver::handle packet #1 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=32
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #2 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=32
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #3 from sender 2: received 18 seqs, new_deliveries=18, total_from_sender=50
+[DEBUG] Receiver::handle packet #4 from sender 1: received 18 seqs, new_deliveries=18, total_from_sender=50
+[DEBUG] Signal wait loop iteration #11
+[DEBUG] Signal wait loop iteration #21
+[DEBUG] Signal wait loop iteration #31
+[DEBUG] Signal wait loop iteration #41
+[DEBUG] Signal received, exiting wait loop after 49 iterations
+Process 3: Task completed, shutting down...

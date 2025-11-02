@@ -1,6 +1,7 @@
 #include "perfectlink/perfect_link_app.hpp"
 #include <iostream> 
 #include <algorithm>
+#include <type_traits>
 
 namespace milestone1 {
 
@@ -45,6 +46,20 @@ void Sender::handleAck(const std::vector<uint32_t>& ack_seqs)
     for (uint32_t seq : ack_seqs) 
     {
         unacked_messages_.erase(seq);
+    }
+}
+
+bool Sender::allMessagesAcked() const 
+{
+    std::lock_guard<std::mutex> lock(mtx_);
+    return pending_queue_.empty() && unacked_messages_.empty();
+}
+
+void Sender::waitUntilAllAcked() 
+{
+    while (running_ && !allMessagesAcked()) 
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 }
 
@@ -145,31 +160,17 @@ void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16
     }
     
     uint32_t sender_id = packet.sender_id;
-    std::vector<uint32_t> new_deliveries;
-    
     {
         // 锁定的局部作用域开始
         std::lock_guard<std::mutex> lock(mtx_);
-        
         for (uint32_t seq : packet.seq_numbers) 
         {
-            auto& delivered = delivered_messages_[sender_id];
-            // maybe slow problem!!!!
-            bool already_delivered = std::find(delivered.begin(), delivered.end(), seq) != delivered.end();
-            
-            if (!already_delivered) 
+            std::unordered_set<uint32_t>& delivered = delivered_messages_[sender_id];
+             // 使用O(1)哈希查找
+            if (delivered.find(seq) == delivered.end()) 
             {
                 logger_->logDelivery(sender_id, seq);
-                delivered.push_back(seq);
-                if (delivered.size() > MAX_DELIVERED_WINDOW) 
-                {
-                    delivered.pop_front();
-                }
-                std::cout << "NEW: d " << sender_id << " " << seq << std::endl;
-            }
-            else 
-            {
-                std::cout << "DUP: d " << sender_id << " " << seq << " (already delivered)" << std::endl;
+                delivered.insert(seq);
             }
         }
 
@@ -339,6 +340,7 @@ void PerfectLinkApp::run()
             sender_->send(seq);
         }
         logger_->flush();
+        sender_->waitUntilAllAcked();
         std::cout << "Process " << my_id_ << ": Sent " << m_ << " messages to process " << receiver_id_ << std::endl;
     } 
     else 
@@ -346,7 +348,6 @@ void PerfectLinkApp::run()
         std::cout << "Process " << my_id_ << ": Ready to receive messages" << std::endl;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    // 直接返回，不等待
 }
 
 void PerfectLinkApp::shutdown() 
@@ -395,8 +396,7 @@ void PerfectLinkApp::receiveLoop()
             // Socket might throw when stopping
             if (running_) 
             {
-                // Only print error if we're still supposed to be running
-                // Otherwise it's expected (socket closed during shutdown)
+                std::cerr << "Error in receiveLoop: " << e.what() << std::endl;
             }
             break;
         }

@@ -1,0 +1,2 @@
+[0;32m✅ TEST PASSED: test1_baseline[0m
+[0;31m❌ TEST FAILED: test2_medium[0m

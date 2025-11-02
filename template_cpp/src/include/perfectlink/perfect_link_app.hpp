@@ -13,6 +13,7 @@
 #include <set>
 #include <chrono>
 #include <deque>
+#include <unordered_set>
 
 namespace milestone1 
 {
@@ -38,6 +39,9 @@ public:
     void stop();
     void send(uint32_t seq_number);
     void handleAck(const std::vector<uint32_t>& ack_seqs);
+    
+    void waitUntilAllAcked();
+    bool allMessagesAcked() const;
 
 private:
     UDPSocket* socket_;
@@ -80,7 +84,7 @@ private:
     UDPSocket* socket_;
     Logger* logger_;
     
-    std::map<uint32_t, std::deque<uint32_t>> delivered_messages_;
+    std::map<uint32_t, std::unordered_set<uint32_t>> delivered_messages_;
     static constexpr size_t MAX_DELIVERED_WINDOW = 10000;
     std::mutex mtx_;
 

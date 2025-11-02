@@ -1,7 +1,0 @@
-Process 3: Sent 20 messages to process 4
-[Sender 3] Sending batch: 1 2 3 4 5 6 7 8 
-[Sender 3] Sending batch: 9 10 11 12 13 14 15 16 
-[Sender 3] Sending batch: 17 18 19 20 
-[Sender 3] Got ACK with seqs: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 
-[Sender 3] Received ACK for seqs: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 
-Process 3: Task completed, shutting down...

@@ -12,8 +12,7 @@
 #include <map>
 #include <set>
 #include <chrono>
-#include <deque>
-#include <unordered_set>
+#include <condition_variable>
 
 namespace milestone1 
 {
@@ -29,6 +28,16 @@ struct SentMessage
         : seq_number(seq), last_sent(time), retransmit_count(0) {}
 };
 
+struct TimeoutEntry 
+{
+    std::chrono::steady_clock::time_point timeout_time;
+    uint32_t seq_number;
+    
+    bool operator>(const TimeoutEntry& other) const {
+        return timeout_time > other.timeout_time;
+    }
+};
+
 class Sender 
 {
 public:
@@ -38,7 +47,6 @@ public:
     void start();
     void stop();
     void send(uint32_t seq_number);
-    void handleAck(const std::vector<uint32_t>& ack_seqs);
     
     void waitUntilAllAcked();
     bool allMessagesAcked() const;
@@ -49,21 +57,26 @@ private:
     Host receiver_;
     Logger* logger_;
     
-    // 待发送队列
     std::queue<uint32_t> pending_queue_;
     std::map<uint32_t, SentMessage> unacked_messages_;
+    std::priority_queue<TimeoutEntry, std::vector<TimeoutEntry>, std::greater<>> timeout_queue_;
+    
+    std::mutex queue_mutex_;
+    std::mutex data_mutex_;
+    std::condition_variable queue_cv_;
+    std::condition_variable timeout_cv_;
     
     std::thread send_thread_;
+    std::thread retransmit_thread_;
+    std::thread ack_receive_thread_;
     std::atomic<bool> running_;
-    mutable std::mutex mtx_;
     
-    static constexpr std::chrono::milliseconds TIMEOUT{100};
-    static constexpr size_t MAX_BATCH_SIZE = 32;
+    static constexpr std::chrono::milliseconds TIMEOUT{50};
+    static constexpr size_t MAX_BATCH_SIZE = 16;
     
-    // 线程的主循环
     void sendLoop();
-    void sendNewMessages();
-    void retransmitTimedOut();
+    void retransmitLoop();
+    void ackReceiveLoop();
 };
 
 class Receiver 
@@ -75,27 +88,24 @@ public:
     void start();
     void stop();
     void handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
-    void flushAllPendingAcks(); 
+    void flushAllPendingAcks();
 
 private:
-    void flushAcks(const std::string& sender_ip, uint16_t sender_port);
     void flushLoop();
 
     UDPSocket* socket_;
     Logger* logger_;
     
-    std::map<uint32_t, std::unordered_set<uint32_t>> delivered_messages_;
-    static constexpr size_t MAX_DELIVERED_WINDOW = 10000;
-    mutable std::mutex mtx_;
-
+    std::map<uint32_t, std::set<uint32_t>> delivered_messages_;
     std::map<std::string, std::vector<uint32_t>> pending_acks_;
-    std::chrono::steady_clock::time_point last_ack_time_;
-    static constexpr std::chrono::milliseconds ACK_FLUSH_INTERVAL{5};
-    static constexpr size_t MAX_ACKS_PER_PACKET = 32;
-
-    // 定期flush线程
+    
+    std::mutex mtx_;
     std::thread flush_thread_;
     std::atomic<bool> flush_running_;
+    
+    static constexpr size_t MAX_DELIVERED_WINDOW = 10000;
+    static constexpr size_t ACK_BATCH_SIZE = 8;
+    static constexpr std::chrono::milliseconds ACK_FLUSH_TIMEOUT{1};
 };
 
 class PerfectLinkApp 
@@ -114,7 +124,8 @@ private:
     uint32_t m_;
     uint32_t receiver_id_;
     
-    UDPSocket* socket_;
+    UDPSocket* receiver_socket_;
+    UDPSocket* sender_socket_;
     Sender* sender_;
     Receiver* receiver_;
     Logger* logger_;

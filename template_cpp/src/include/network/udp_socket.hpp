@@ -7,14 +7,12 @@
 
 class UDPSocket {
 public:
-    // Create and bind socket
     explicit UDPSocket(uint16_t port);
     ~UDPSocket();
     
     void send(const std::string& ip, uint16_t port, const std::vector<uint8_t>& data);
-
-    // return sender mesage, ip, port
     std::tuple<std::vector<uint8_t>, std::string, uint16_t> receive();
+    void close();
     
     uint16_t getPort() const { return port_; }
     int getFd() const { return socket_fd_; }

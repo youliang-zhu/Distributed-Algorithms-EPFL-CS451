@@ -2,5 +2,12 @@
 .vscode
 packages.microsoft.gpg
 vscode_old.deb
+
 /template_cpp/src/test_common.cpp
 /template_cpp/src/test_network.cpp
+
+build/
+template_cpp/files/output/
+template_cpp/optimized_test_logs/
+template_cpp/debug_logs
+template_cpp/detail_logs

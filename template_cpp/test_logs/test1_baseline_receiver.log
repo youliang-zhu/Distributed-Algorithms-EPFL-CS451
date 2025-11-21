@@ -1,0 +1,14 @@
+Process 4: Ready to receive messages
+[DEBUG] receiveLoop started
+[DEBUG] Entering signal wait loop...
+[DEBUG] Signal wait loop iteration #1
+[DEBUG] Receiver::handle packet #1 from sender 1: received 20 seqs, new_deliveries=20, total_from_sender=20
+[DEBUG] Receiver::handle packet #2 from sender 2: received 20 seqs, new_deliveries=20, total_from_sender=20
+[DEBUG] Receiver::handle packet #3 from sender 3: received 20 seqs, new_deliveries=20, total_from_sender=20
+[DEBUG] Signal wait loop iteration #11
+[DEBUG] Signal wait loop iteration #21
+[DEBUG] Signal wait loop iteration #31
+[DEBUG] Signal wait loop iteration #41
+[DEBUG] Signal wait loop iteration #51
+[DEBUG] Signal received, exiting wait loop after 59 iterations
+Process 4: Task completed, shutting down...

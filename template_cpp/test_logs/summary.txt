@@ -1,0 +1,4 @@
+[0;32m✅ TEST PASSED: test1_baseline[0m
+[0;32m✅ TEST PASSED: test2_medium[0m
+[0;32m✅ TEST PASSED: test3_large[0m
+[0;32m✅ TEST PASSED: test5_stress[0m

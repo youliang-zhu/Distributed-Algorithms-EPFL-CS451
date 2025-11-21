@@ -18,7 +18,7 @@
 [DEBUG]   ✓ Send successful
 [DEBUG] handleAck: received ACK for 4 messages, first=97, last=100, unacked_before=4, removed=4, unacked_after=0
 [DEBUG] waitUntilAllAcked exiting after 1 iterations
-Process 2: Sent 100 messages to process 3
+Process 1: Sent 100 messages to process 4
 [DEBUG] Entering signal wait loop...
 [DEBUG] Signal wait loop iteration #1
 [DEBUG] Signal wait loop iteration #11
@@ -29,6 +29,8 @@ Process 2: Sent 100 messages to process 3
 [DEBUG] sendLoop #301: pending=0, unacked=0
 [DEBUG] Signal wait loop iteration #41
 [DEBUG] sendLoop #401: pending=0, unacked=0
-[DEBUG] Signal received, exiting wait loop after 49 iterations
-Process 2: Task completed, shutting down...
-[DEBUG] sendLoop exiting after 453 iterations
+[DEBUG] Signal wait loop iteration #51
+[DEBUG] sendLoop #501: pending=0, unacked=0
+[DEBUG] Signal received, exiting wait loop after 59 iterations
+Process 1: Task completed, shutting down...
+[DEBUG] sendLoop exiting after 528 iterations

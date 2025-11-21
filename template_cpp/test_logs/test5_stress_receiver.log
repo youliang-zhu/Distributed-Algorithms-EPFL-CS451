@@ -1,0 +1,1462 @@
+Process 4: Ready to receive messages
+[DEBUG] receiveLoop started
+[DEBUG] Entering signal wait loop...
+[DEBUG] Signal wait loop iteration #1
+[DEBUG] Signal wait loop iteration #11
+[DEBUG] Receiver::handle packet #1 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=32
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #2 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=32
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #3 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=64
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #4 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=32
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #5 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=64
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #6 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=96
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #7 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=64
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #8 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=128
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #9 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=96
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #10 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=96
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #11 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=160
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #12 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=128
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #13 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=192
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #14 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=160
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #15 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=128
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #16 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=224
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #17 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=192
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #18 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=160
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #19 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=224
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #20 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=256
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #21 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=192
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #22 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=256
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #23 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=288
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #24 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=224
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #25 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=320
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #26 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=288
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #27 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=256
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #28 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=352
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #29 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=320
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #30 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=288
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #31 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=352
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #32 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=384
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #33 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=320
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #34 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=416
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #35 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=384
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #36 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=352
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #37 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=416
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #38 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=448
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #39 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=384
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #40 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=416
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] Receiver::handle packet #41 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=448
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #42 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=480
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #43 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=448
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #44 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=512
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #45 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=480
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #46 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=480
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #47 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=544
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #48 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=512
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #49 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=544
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #50 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=576
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #51 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=512
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #52 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=608
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #53 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=576
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #54 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=544
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #55 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=608
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #56 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=640
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #57 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=576
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #58 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=640
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #59 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=672
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #60 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=608
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #61 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=640
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #62 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=704
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #63 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=672
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #64 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=736
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #65 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=704
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #66 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=672
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #67 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=768
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] Receiver::handle packet #68 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=736
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #69 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=704
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #70 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=736
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #71 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=800
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #72 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=768
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #73 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=832
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #74 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=768
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #75 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=800
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #76 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=864
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #77 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=800
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #78 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=832
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #79 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=896
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #80 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=832
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #81 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=864
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #82 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=928
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #83 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=864
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #84 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=896
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #85 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=960
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #86 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=928
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #87 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=896
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #88 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=960
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #89 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=992
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #90 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=928
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #91 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1024
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #92 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=992
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #93 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=960
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #94 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1024
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #95 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1056
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #96 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=992
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #97 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1088
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #98 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1056
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #99 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1024
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #100 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1088
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #101 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1056
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #102 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1120
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #103 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1120
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #104 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1152
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #105 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1088
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #106 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1152
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #107 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1184
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #108 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1120
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #109 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1216
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #110 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1184
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #111 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1152
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #112 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1216
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #113 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1184
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #114 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1248
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #115 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1248
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #116 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1216
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #117 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1280
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #118 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1280
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #119 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1248
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #120 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1312
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #121 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1312
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #122 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1280
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #123 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1344
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #124 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1344
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #125 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1312
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #126 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1376
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #127 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1376
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #128 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1344
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #129 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1408
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #130 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1408
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #131 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1376
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #132 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1440
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #133 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1440
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #134 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1408
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #135 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1472
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #136 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1472
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #137 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1440
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #138 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1504
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #139 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1536
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #140 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1504
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #141 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1472
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #142 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1568
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #143 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1536
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #144 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1504
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #145 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1600
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #146 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1568
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #147 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1536
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #148 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1632
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #149 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1600
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #150 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1568
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #151 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1632
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #152 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1600
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #153 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1664
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #154 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1664
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #155 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1632
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #156 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1696
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #157 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1696
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #158 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1664
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #159 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1728
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #160 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1728
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #161 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1696
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #162 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1760
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #163 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1760
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #164 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1728
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #165 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1792
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #166 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1792
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #167 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1760
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #168 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1824
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #169 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1824
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #170 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1792
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #171 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1856
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #172 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1856
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #173 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1888
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #174 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1824
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #175 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1920
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #176 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1888
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #177 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1856
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #178 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1920
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #179 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1888
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #180 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1952
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #181 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=1984
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #182 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1920
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #183 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1952
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #184 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2016
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #185 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1952
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #186 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=1984
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #187 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2048
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #188 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2016
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #189 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=1984
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #190 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2080
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #191 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2048
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #192 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2016
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #193 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2112
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #194 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2048
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #195 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2080
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #196 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2144
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #197 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2080
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #198 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2112
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #199 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2112
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #200 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2176
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #201 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2144
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #202 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2144
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #203 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2208
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #204 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2176
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Signal wait loop iteration #21
+[DEBUG] Receiver::handle packet #205 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2176
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #206 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2240
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #207 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2208
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #208 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2272
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #209 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2208
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #210 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2240
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #211 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2304
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #212 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2240
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #213 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2272
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #214 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2272
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #215 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2336
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #216 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2304
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #217 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2304
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #218 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2336
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #219 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2368
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #220 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2400
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #221 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2336
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #222 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2368
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #223 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2368
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #224 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2432
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #225 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2400
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #226 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2464
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #227 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2400
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #228 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2432
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #229 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2432
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #230 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2496
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #231 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2464
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #232 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2528
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #233 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2464
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #234 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2496
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #235 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2560
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #236 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2496
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #237 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2528
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #238 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2592
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #239 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2528
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #240 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2560
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #241 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2592
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #242 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2560
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #243 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2624
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #244 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2592
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #245 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2624
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #246 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2656
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #247 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2624
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #248 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2656
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #249 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2688
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #250 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2656
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #251 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2720
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #252 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2688
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #253 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2752
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #254 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2720
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #255 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2688
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #256 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2784
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #257 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2752
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #258 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2720
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #259 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2816
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #260 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2752
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #261 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2784
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #262 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2848
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #263 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2784
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #264 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2816
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #265 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2816
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #266 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2880
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #267 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2848
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #268 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2912
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #269 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2848
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #270 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2880
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #271 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2944
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #272 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2880
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #273 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2912
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #274 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2912
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #275 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=2976
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #276 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2944
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #277 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=2976
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #278 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3008
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #279 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2944
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #280 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3040
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #281 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3008
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #282 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=2976
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #283 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3072
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #284 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3008
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #285 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3040
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #286 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3104
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #287 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3040
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #288 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3072
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #289 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3136
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #290 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3072
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #291 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3104
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #292 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3168
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #293 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3136
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #294 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3104
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #295 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3200
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #296 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3168
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #297 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3136
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #298 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3232
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #299 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3200
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #300 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3168
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #301 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3264
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #302 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3232
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #303 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3200
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #304 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3296
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #305 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3264
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #306 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3232
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #307 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3328
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #308 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3296
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #309 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3264
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #310 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3360
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #311 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3328
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #312 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3296
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #313 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3392
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] Receiver::handle packet #314 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3360
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #315 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3328
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #316 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3360
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #317 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3392
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #318 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3424
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #319 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3456
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #320 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3424
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #321 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3392
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #322 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3456
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #323 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3424
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #324 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3488
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #325 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3488
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #326 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3456
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #327 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3520
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #328 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3520
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #329 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3488
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #330 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3552
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #331 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3552
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #332 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3520
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #333 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3584
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #334 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3584
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #335 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3552
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #336 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3616
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #337 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3616
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #338 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3584
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #339 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3648
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #340 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3648
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #341 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3616
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #342 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3680
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #343 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3680
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #344 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3648
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #345 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3712
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #346 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3712
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #347 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3680
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #348 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3744
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #349 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3744
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #350 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3712
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #351 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3776
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #352 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3776
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #353 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3744
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #354 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3808
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #355 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3808
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #356 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3776
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #357 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3840
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #358 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3840
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #359 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3808
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #360 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3872
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #361 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3840
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #362 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3872
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #363 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3904
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #364 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3872
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #365 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3904
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #366 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3936
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] Receiver::handle packet #367 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3904
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #368 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3936
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #369 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=3968
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #370 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=3968
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #371 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3936
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #372 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4000
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #373 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=3968
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #374 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4000
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #375 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4032
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #376 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4032
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #377 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4000
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #378 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4064
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #379 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4064
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #380 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4032
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #381 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4096
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #382 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4096
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #383 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4064
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #384 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4128
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #385 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4128
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #386 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4096
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #387 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4160
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #388 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4160
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #389 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4128
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #390 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4192
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #391 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4160
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #392 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4192
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #393 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4192
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #394 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4224
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #395 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4224
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #396 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4224
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #397 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4256
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #398 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4256
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #399 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4256
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #400 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4288
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #401 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4288
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #402 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4288
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #403 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4320
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #404 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4320
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #405 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4320
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #406 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4352
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #407 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4352
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #408 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4352
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #409 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4384
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #410 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4384
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #411 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4416
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #412 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4384
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #413 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4416
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #414 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4416
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #415 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4448
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #416 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4448
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #417 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4448
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #418 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4480
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #419 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4480
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #420 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4512
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #421 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4512
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #422 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4480
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #423 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4544
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #424 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4544
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #425 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4512
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #426 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4544
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #427 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4576
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #428 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4576
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #429 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4608
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #430 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4576
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #431 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4608
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #432 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4640
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #433 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4608
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #434 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4640
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #435 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4672
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #436 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4640
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #437 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4672
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #438 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4704
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #439 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4672
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #440 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4704
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #441 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4704
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #442 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4736
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #443 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4736
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #444 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4768
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #445 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4768
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #446 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4736
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #447 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4800
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #448 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4768
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #449 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4800
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #450 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4832
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #451 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4800
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #452 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4832
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #453 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4864
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #454 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4864
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #455 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4832
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #456 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4896
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #457 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4896
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #458 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4864
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #459 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4928
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #460 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4896
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #461 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4928
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #462 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4960
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #463 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4928
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #464 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4960
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #465 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4960
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #466 from sender 2: received 32 seqs, new_deliveries=32, total_from_sender=4992
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #467 from sender 3: received 32 seqs, new_deliveries=32, total_from_sender=4992
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #468 from sender 1: received 32 seqs, new_deliveries=32, total_from_sender=4992
+[DEBUG]   Triggering immediate ACK flush (threshold reached)
+[DEBUG] flushAcks: sent 32 ACKs to 127.0.0.1
+[DEBUG] Receiver::handle packet #469 from sender 2: received 8 seqs, new_deliveries=8, total_from_sender=5000
+[DEBUG] Receiver::handle packet #470 from sender 3: received 8 seqs, new_deliveries=8, total_from_sender=5000
+[DEBUG] Receiver::handle packet #471 from sender 1: received 8 seqs, new_deliveries=8, total_from_sender=5000
+[DEBUG] Signal wait loop iteration #31
+[DEBUG] Signal wait loop iteration #41
+[DEBUG] Signal wait loop iteration #51
+[DEBUG] Signal wait loop iteration #61
+[DEBUG] Signal wait loop iteration #71
+[DEBUG] Signal wait loop iteration #81
+[DEBUG] Signal wait loop iteration #91
+[DEBUG] Signal wait loop iteration #101
+[DEBUG] Signal wait loop iteration #111
+[DEBUG] Signal wait loop iteration #121
+[DEBUG] Signal wait loop iteration #131
+[DEBUG] Signal wait loop iteration #141
+[DEBUG] Signal wait loop iteration #151
+[DEBUG] Signal wait loop iteration #161
+[DEBUG] Signal wait loop iteration #171
+[DEBUG] Signal wait loop iteration #181
+[DEBUG] Signal wait loop iteration #191
+[DEBUG] Signal wait loop iteration #201
+[DEBUG] Signal wait loop iteration #211
+[DEBUG] Signal wait loop iteration #221
+[DEBUG] Signal wait loop iteration #231
+[DEBUG] Signal wait loop iteration #241
+[DEBUG] Signal wait loop iteration #251
+[DEBUG] Signal wait loop iteration #261
+[DEBUG] Signal wait loop iteration #271
+[DEBUG] Signal wait loop iteration #281
+[DEBUG] Signal wait loop iteration #291
+[DEBUG] Signal wait loop iteration #301
+[DEBUG] Signal wait loop iteration #311
+[DEBUG] Signal wait loop iteration #321
+[DEBUG] Signal wait loop iteration #331
+[DEBUG] Signal wait loop iteration #341
+[DEBUG] Signal wait loop iteration #351
+[DEBUG] Signal wait loop iteration #361
+[DEBUG] Signal wait loop iteration #371
+[DEBUG] Signal wait loop iteration #381
+[DEBUG] Signal wait loop iteration #391
+[DEBUG] Signal wait loop iteration #401
+[DEBUG] Signal wait loop iteration #411
+[DEBUG] Signal wait loop iteration #421
+[DEBUG] Signal wait loop iteration #431
+[DEBUG] Signal wait loop iteration #441
+[DEBUG] Signal wait loop iteration #451
+[DEBUG] Signal wait loop iteration #461
+[DEBUG] Signal wait loop iteration #471
+[DEBUG] Signal wait loop iteration #481
+[DEBUG] Signal wait loop iteration #491
+[DEBUG] Signal wait loop iteration #501
+[DEBUG] Signal wait loop iteration #511
+[DEBUG] Signal wait loop iteration #521
+[DEBUG] Signal wait loop iteration #531
+[DEBUG] Signal received, exiting wait loop after 536 iterations
+Process 4: Task completed, shutting down...

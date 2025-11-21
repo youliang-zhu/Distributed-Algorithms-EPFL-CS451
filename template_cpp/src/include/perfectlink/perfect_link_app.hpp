@@ -55,10 +55,10 @@ private:
     
     std::thread send_thread_;
     std::atomic<bool> running_;
-    std::mutex mtx_;
+    mutable std::mutex mtx_;
     
-    static constexpr std::chrono::milliseconds TIMEOUT{300};
-    static constexpr size_t MAX_BATCH_SIZE = 8;
+    static constexpr std::chrono::milliseconds TIMEOUT{100};
+    static constexpr size_t MAX_BATCH_SIZE = 32;
     
     // 线程的主循环
     void sendLoop();
@@ -86,12 +86,12 @@ private:
     
     std::map<uint32_t, std::unordered_set<uint32_t>> delivered_messages_;
     static constexpr size_t MAX_DELIVERED_WINDOW = 10000;
-    std::mutex mtx_;
+    mutable std::mutex mtx_;
 
     std::map<std::string, std::vector<uint32_t>> pending_acks_;
     std::chrono::steady_clock::time_point last_ack_time_;
-    static constexpr std::chrono::milliseconds ACK_FLUSH_INTERVAL{200};
-    static constexpr size_t MAX_ACKS_PER_PACKET = 64;
+    static constexpr std::chrono::milliseconds ACK_FLUSH_INTERVAL{5};
+    static constexpr size_t MAX_ACKS_PER_PACKET = 32;
 
     // 定期flush线程
     std::thread flush_thread_;

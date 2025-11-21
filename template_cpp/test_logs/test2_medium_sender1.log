@@ -1,0 +1,36 @@
+[DEBUG] waitUntilAllAcked loop #1: pending=100, unacked=0
+[DEBUG] sendLoop #1: pending=100, unacked=0
+[DEBUG] sendNewMessages batch #1: size=32, first_seq=1, last_seq=32, remaining_pending=68, total_unacked=32
+[DEBUG]   Sending packet: 134 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] receiveLoop started
+[DEBUG] handleAck: received ACK for 32 messages, first=1, last=32, unacked_before=32, removed=32, unacked_after=0
+[DEBUG] sendNewMessages batch #2: size=32, first_seq=33, last_seq=64, remaining_pending=36, total_unacked=32
+[DEBUG]   Sending packet: 134 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] handleAck: received ACK for 32 messages, first=33, last=64, unacked_before=32, removed=32, unacked_after=0
+[DEBUG] sendNewMessages batch #3: size=32, first_seq=65, last_seq=96, remaining_pending=4, total_unacked=32
+[DEBUG]   Sending packet: 134 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] handleAck: received ACK for 32 messages, first=65, last=96, unacked_before=32, removed=32, unacked_after=0
+[DEBUG] sendNewMessages batch #4: size=4, first_seq=97, last_seq=100, remaining_pending=0, total_unacked=4
+[DEBUG]   Sending packet: 22 bytes
+[DEBUG]   ✓ Send successful
+[DEBUG] handleAck: received ACK for 4 messages, first=97, last=100, unacked_before=4, removed=4, unacked_after=0
+[DEBUG] waitUntilAllAcked exiting after 1 iterations
+Process 1: Sent 100 messages to process 4
+[DEBUG] Entering signal wait loop...
+[DEBUG] Signal wait loop iteration #1
+[DEBUG] Signal wait loop iteration #11
+[DEBUG] sendLoop #101: pending=0, unacked=0
+[DEBUG] Signal wait loop iteration #21
+[DEBUG] sendLoop #201: pending=0, unacked=0
+[DEBUG] Signal wait loop iteration #31
+[DEBUG] sendLoop #301: pending=0, unacked=0
+[DEBUG] Signal wait loop iteration #41
+[DEBUG] sendLoop #401: pending=0, unacked=0
+[DEBUG] Signal wait loop iteration #51
+[DEBUG] sendLoop #501: pending=0, unacked=0
+[DEBUG] Signal received, exiting wait loop after 59 iterations
+Process 1: Task completed, shutting down...
+[DEBUG] sendLoop exiting after 528 iterations

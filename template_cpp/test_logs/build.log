@@ -1,0 +1,36 @@
+-- The C compiler identification is GNU 7.5.0
+-- The CXX compiler identification is GNU 7.5.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Looking for pthread_create
+-- Looking for pthread_create - not found
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/dcl/da/CS451-2025-project/template_cpp/target
+Scanning dependencies of target da_proc
+[ 12%] Building CXX object src/CMakeFiles/da_proc.dir/src/main.cpp.o
+[ 25%] Building CXX object src/CMakeFiles/da_proc.dir/src/common/config.cpp.o
+[ 37%] Building CXX object src/CMakeFiles/da_proc.dir/src/common/logger.cpp.o
+[ 50%] Building CXX object src/CMakeFiles/da_proc.dir/src/common/signal_handler.cpp.o
+[ 62%] Building CXX object src/CMakeFiles/da_proc.dir/src/network/message.cpp.o
+[ 75%] Building CXX object src/CMakeFiles/da_proc.dir/src/network/udp_socket.cpp.o
+[ 87%] Building CXX object src/CMakeFiles/da_proc.dir/src/perfectlink/perfect_link_app.cpp.o
+[100%] Linking CXX executable da_proc
+[100%] Built target da_proc

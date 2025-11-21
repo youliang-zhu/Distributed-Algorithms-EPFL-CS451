@@ -61,8 +61,8 @@ private:
     std::map<uint32_t, SentMessage> unacked_messages_;
     std::priority_queue<TimeoutEntry, std::vector<TimeoutEntry>, std::greater<>> timeout_queue_;
     
-    std::mutex queue_mutex_;
-    std::mutex data_mutex_;
+    mutable std::mutex queue_mutex_;
+    mutable std::mutex data_mutex_;
     std::condition_variable queue_cv_;
     std::condition_variable timeout_cv_;
     

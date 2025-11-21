@@ -165,7 +165,7 @@ void Receiver::stop() {
 void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port) {
     if (packet.type != MessageType::PERFECT_LINK_DATA) return;
     
-    std::string key = sender_ip + ":" + std::to_string(sender_port);
+    std::string key = sender_ip + ":" + std::to_string(static_cast<unsigned int>(sender_port));
     std::lock_guard<std::mutex> lock(mtx_);
     
     uint32_t sender_id = packet.sender_id;
@@ -245,13 +245,13 @@ PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
     : my_id_(my_id), hosts_(hosts), m_(m), receiver_id_(receiver_id), running_(false) {
     Host my_host = findHost(my_id_);
     receiver_socket_ = new UDPSocket(my_host.port);
-    sender_socket_ = new UDPSocket(my_host.port + 1000);
+    sender_socket_ = new UDPSocket(static_cast<uint16_t>(my_host.port + 1000));
     logger_ = new Logger(output_path);
     
     if (my_id_ != receiver_id_) {
         Host receiver_host = findHost(receiver_id_);
         Host adjusted_receiver = receiver_host;
-        adjusted_receiver.port += 1000;
+        adjusted_receiver.port = static_cast<uint16_t>(adjusted_receiver.port + 1000);
         sender_ = new Sender(sender_socket_, my_id_, adjusted_receiver, logger_);
     } else {
         sender_ = nullptr;

@@ -7,32 +7,30 @@
 #include <stdexcept>
 #include <tuple>
 
-UDPSocket::UDPSocket(uint16_t port) : port_(port) 
-{
-    // Create UDP socket
+UDPSocket::UDPSocket(uint16_t port) : port_(port) {
     socket_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
-    if (socket_fd_ < 0) 
-    {
-        throw std::runtime_error("Failed to create socket");
-    }
-    // Bind to port
+    if (socket_fd_ < 0) throw std::runtime_error("Failed to create socket");
+    
     sockaddr_in addr;
     std::memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
-    if (bind(socket_fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) 
-    {
-        close(socket_fd_);
+    
+    if (bind(socket_fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {
+        ::close(socket_fd_);
         throw std::runtime_error("Failed to bind socket");
     }
 }
 
-UDPSocket::~UDPSocket() 
-{
-    if (socket_fd_ >= 0) 
-    {
-        close(socket_fd_);
+UDPSocket::~UDPSocket() {
+    close();
+}
+
+void UDPSocket::close() {
+    if (socket_fd_ >= 0) {
+        ::close(socket_fd_);
+        socket_fd_ = -1;
     }
 }
 

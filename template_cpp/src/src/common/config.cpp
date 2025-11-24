@@ -2,19 +2,24 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 Config Config::parse(const std::string& config_path) 
 {
+    std::cout << "[DEBUG] Config::parse() reading: " << config_path << std::endl;
+    
     Config config;
     std::ifstream file(config_path);
     
     if (!file.is_open()) 
     {
+        std::cerr << "[DEBUG] Config::parse() failed to open file" << std::endl;
         return config;
     }
     
     std::string first_line;
     std::getline(file, first_line);
+    std::cout << "[DEBUG] Config first_line: '" << first_line << "'" << std::endl;
     
     std::istringstream iss(first_line);
     uint32_t first_num, second_num, third_num;
@@ -52,6 +57,8 @@ Config Config::parse(const std::string& config_path)
             config.type_ = ConfigType::PERFECT_LINK;
             config.perfect_link_config_.m = first_num;
             config.perfect_link_config_.receiver_id = second_num;
+            std::cout << "[DEBUG] Parsed Perfect Link config: m=" << first_num 
+                      << ", receiver_id=" << second_num << std::endl;
         }
     } 
     else 

@@ -103,21 +103,29 @@ void Sender::retransmitLoop() {
         if (!running_) break;
         
         if (wait_result == std::cv_status::timeout) {
-            timeout_queue_.pop();
-            
-            auto it = unacked_messages_.find(entry.seq_number);
-            if (it == unacked_messages_.end()) continue;
-            
             auto now = std::chrono::steady_clock::now();
-            it->second.last_sent = now;
-            it->second.retransmit_count++;
-            timeout_queue_.push({now + TIMEOUT, entry.seq_number});
+            std::vector<uint32_t> to_retransmit;
             
-            std::vector<uint32_t> batch = {entry.seq_number};
-            lock.unlock();
+            while (!timeout_queue_.empty() && to_retransmit.size() < MAX_BATCH_SIZE) {
+                auto e = timeout_queue_.top();
+                if (e.timeout_time > now) break;
+                
+                timeout_queue_.pop();
+                
+                auto it = unacked_messages_.find(e.seq_number);
+                if (it == unacked_messages_.end()) continue;
+                
+                to_retransmit.push_back(e.seq_number);
+                it->second.last_sent = now;
+                it->second.retransmit_count++;
+                timeout_queue_.push({now + TIMEOUT, e.seq_number});
+            }
             
-            Packet packet = Packet::createDataPacket(my_id_, batch);
-            socket_->send(receiver_.ip, receiver_.port, packet.serialize());
+            if (!to_retransmit.empty()) {
+                lock.unlock();
+                Packet packet = Packet::createDataPacket(my_id_, to_retransmit);
+                socket_->send(receiver_.ip, receiver_.port, packet.serialize());
+            }
         }
     }
 }
@@ -243,21 +251,31 @@ void Receiver::flushAllPendingAcks() {
 PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
                                uint32_t m, uint32_t receiver_id, const std::string& output_path)
     : my_id_(my_id), hosts_(hosts), m_(m), receiver_id_(receiver_id), running_(false) {
+    std::cout << "[DEBUG] PerfectLinkApp constructor: id=" << my_id 
+              << ", m=" << m << ", receiver=" << receiver_id 
+              << ", output=" << output_path << std::endl;
+    
     Host my_host = findHost(my_id_);
+    std::cout << "[DEBUG] My host: id=" << my_host.id << ", port=" << my_host.port << std::endl;
+    
     receiver_socket_ = new UDPSocket(my_host.port);
     sender_socket_ = new UDPSocket(static_cast<uint16_t>(my_host.port + 1000));
+    std::cout << "[DEBUG] Sockets created: receiver_port=" << my_host.port 
+              << ", sender_port=" << (my_host.port + 1000) << std::endl;
+    
     logger_ = new Logger(output_path);
     
     if (my_id_ != receiver_id_) {
+        std::cout << "[DEBUG] I am SENDER" << std::endl;
         Host receiver_host = findHost(receiver_id_);
-        Host adjusted_receiver = receiver_host;
-        adjusted_receiver.port = static_cast<uint16_t>(adjusted_receiver.port + 1000);
-        sender_ = new Sender(sender_socket_, my_id_, adjusted_receiver, logger_);
+        sender_ = new Sender(sender_socket_, my_id_, receiver_host, logger_);
     } else {
+        std::cout << "[DEBUG] I am RECEIVER" << std::endl;
         sender_ = nullptr;
     }
     
     receiver_ = new Receiver(receiver_socket_, logger_);
+    std::cout << "[DEBUG] PerfectLinkApp constructor complete" << std::endl;
 }
 
 PerfectLinkApp::~PerfectLinkApp() {
@@ -270,28 +288,44 @@ PerfectLinkApp::~PerfectLinkApp() {
 }
 
 void PerfectLinkApp::run() {
+    std::cout << "[DEBUG] PerfectLinkApp::run() started" << std::endl;
+    
     running_ = true;
     receive_thread_ = std::thread(&PerfectLinkApp::receiveLoop, this);
     receiver_->start();
     
     if (sender_ != nullptr) {
+        std::cout << "[DEBUG] Starting sender, will send " << m_ << " messages" << std::endl;
         sender_->start();
+        
         for (uint32_t seq = 1; seq <= m_; seq++) {
             sender_->send(seq);
         }
+        std::cout << "[DEBUG] All messages queued, flushing logger" << std::endl;
         logger_->flush();
+        
+        std::cout << "[DEBUG] Waiting for all ACKs..." << std::endl;
         sender_->waitUntilAllAcked();
+        std::cout << "[DEBUG] All messages acked!" << std::endl;
+    } else {
+        std::cout << "[DEBUG] Receiver mode, listening for messages" << std::endl;
     }
+    
+    std::cout << "[DEBUG] PerfectLinkApp::run() complete" << std::endl;
 }
 
 void PerfectLinkApp::shutdown() {
+    std::cout << "[DEBUG] PerfectLinkApp::shutdown() started" << std::endl;
+    
     receiver_->stop();
     if (sender_ != nullptr) sender_->stop();
     
     running_ = false;
     if (receive_thread_.joinable()) receive_thread_.detach();
     
+    std::cout << "[DEBUG] Flushing logger before exit" << std::endl;
     logger_->flush();
+    std::cout << "[DEBUG] PerfectLinkApp::shutdown() complete" << std::endl;
 }
 
 

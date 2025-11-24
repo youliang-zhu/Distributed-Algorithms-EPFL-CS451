@@ -12,6 +12,10 @@ int main(int argc, char** argv)
     Parser parser(argc, argv);
     parser.parse();
     
+    std::cout << "[DEBUG] Parser: id=" << parser.id() 
+              << ", configPath=" << parser.configPath() 
+              << ", outputPath=" << parser.outputPath() << std::endl;
+    
     SignalHandler::setup();
     Config config = Config::parse(parser.configPath());
     

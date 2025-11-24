@@ -1,5 +1,6 @@
 #include "common/logger.hpp"
 #include <fstream>
+#include <iostream>
 
 Logger::Logger(const std::string& output_path) 
     : output_path_(output_path) 
@@ -47,10 +48,10 @@ void Logger::flushInternal()
         return;
     }
     
-    // 使用追加模式打开文件
     std::ofstream file(output_path_, std::ios::app);
     if (!file.is_open()) 
     {
+        std::cerr << "[DEBUG] Logger: Failed to open file: " << output_path_ << std::endl;
         return;
     }
     
@@ -60,5 +61,6 @@ void Logger::flushInternal()
     }
     
     file.close();
+    std::cout << "[DEBUG] Logger: Flushed " << buffer_.size() << " lines to " << output_path_ << std::endl;
     buffer_.clear();
 }

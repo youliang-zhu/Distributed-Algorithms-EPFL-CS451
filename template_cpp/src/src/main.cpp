@@ -46,19 +46,28 @@ int main(int argc, char** argv)
       
       app.run();
       
-      std::cout << "[DEBUG] Entering signal wait loop..." << std::endl;
-      int wait_count = 0;
-      while (!SignalHandler::shouldStop()) 
-      {
-          wait_count++;
-          if (wait_count % 10 == 1) {  // Print every second (10 * 100ms)
-              std::cout << "[DEBUG] Signal wait loop iteration #" << wait_count << std::endl;
+      // Senders exit after completing their task
+      // Receivers wait for signal
+      std::cout << "[DEBUG] app.isSender() = " << (app.isSender() ? "true" : "false") << std::endl;
+      if (app.isSender()) {
+          std::cout << "[DEBUG] Sender completed, shutting down..." << std::endl;
+          app.shutdown();
+          std::cout << "Process " << parser.id() << ": Task completed, shutting down..." << std::endl;
+      } else {
+          std::cout << "[DEBUG] Receiver entering signal wait loop..." << std::endl;
+          int wait_count = 0;
+          while (!SignalHandler::shouldStop()) 
+          {
+              wait_count++;
+              if (wait_count % 10 == 1) {  // Print every second (10 * 100ms)
+                  std::cout << "[DEBUG] Signal wait loop iteration #" << wait_count << std::endl;
+              }
+              std::this_thread::sleep_for(std::chrono::milliseconds(100));
           }
-          std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      }
-      std::cout << "[DEBUG] Signal received, exiting wait loop after " << wait_count << " iterations" << std::endl;
-      std::cout << "Process " << parser.id() << ": Task completed, shutting down..." << std::endl;
-      app.shutdown();
+          std::cout << "[DEBUG] Signal received, exiting wait loop after " << wait_count << " iterations" << std::endl;
+          std::cout << "Process " << parser.id() << ": Task completed, shutting down..." << std::endl;
+          app.shutdown();
+      };
         
     }
     else 

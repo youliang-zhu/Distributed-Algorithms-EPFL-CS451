@@ -117,6 +117,7 @@ public:
     
     void run();
     void shutdown();
+    bool isSender() const { return sender_ != nullptr; }
 
 private:
     uint32_t my_id_;

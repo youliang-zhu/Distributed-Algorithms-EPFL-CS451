@@ -26,13 +26,24 @@ void Sender::start() {
 }
 
 void Sender::stop() {
+    std::cout << "[DEBUG] Sender::stop() started" << std::endl;
     running_ = false;
     queue_cv_.notify_all();
     timeout_cv_.notify_all();
     
-    if (ack_receive_thread_.joinable()) ack_receive_thread_.join();
+    std::cout << "[DEBUG] Detaching ack_receive_thread (blocked on socket)..." << std::endl;
+    if (ack_receive_thread_.joinable()) ack_receive_thread_.detach();
+    std::cout << "[DEBUG] ack_receive_thread detached" << std::endl;
+    
+    std::cout << "[DEBUG] Joining retransmit_thread..." << std::endl;
     if (retransmit_thread_.joinable()) retransmit_thread_.join();
+    std::cout << "[DEBUG] retransmit_thread joined" << std::endl;
+    
+    std::cout << "[DEBUG] Joining send_thread..." << std::endl;
     if (send_thread_.joinable()) send_thread_.join();
+    std::cout << "[DEBUG] send_thread joined" << std::endl;
+    
+    std::cout << "[DEBUG] Sender::stop() complete" << std::endl;
 }
 
 void Sender::send(uint32_t seq_number) {
@@ -51,9 +62,18 @@ bool Sender::allMessagesAcked() const {
 }
 
 void Sender::waitUntilAllAcked() {
+    int wait_count = 0;
     while (running_ && !allMessagesAcked()) {
+        if (wait_count % 20 == 0) {  // Print every 1 second
+            std::lock_guard<std::mutex> lock1(queue_mutex_);
+            std::lock_guard<std::mutex> lock2(data_mutex_);
+            std::cout << "[DEBUG] Still waiting: pending_queue=" << pending_queue_.size() 
+                      << ", unacked=" << unacked_messages_.size() << std::endl;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        wait_count++;
     }
+    std::cout << "[DEBUG] waitUntilAllAcked completed" << std::endl;
 }
 
 void Sender::sendLoop() {
@@ -131,6 +151,7 @@ void Sender::retransmitLoop() {
 }
 
 void Sender::ackReceiveLoop() {
+    std::cout << "[DEBUG] ackReceiveLoop started" << std::endl;
     while (running_) {
         try {
             auto [data, sender_ip, sender_port] = socket_->receive();
@@ -143,10 +164,12 @@ void Sender::ackReceiveLoop() {
                 }
                 timeout_cv_.notify_one();
             }
-        } catch (const std::exception&) {
+        } catch (const std::exception& e) {
+            std::cout << "[DEBUG] ackReceiveLoop caught exception: " << e.what() << ", running_=" << running_ << std::endl;
             if (!running_) break;
         }
     }
+    std::cout << "[DEBUG] ackReceiveLoop finished" << std::endl;
 }
 
 // ============================================================================
@@ -166,8 +189,12 @@ void Receiver::start() {
 }
 
 void Receiver::stop() {
+    std::cout << "[DEBUG] Receiver::stop() started" << std::endl;
     flush_running_ = false;
+    std::cout << "[DEBUG] Joining flush_thread..." << std::endl;
     if (flush_thread_.joinable()) flush_thread_.join();
+    std::cout << "[DEBUG] flush_thread joined" << std::endl;
+    std::cout << "[DEBUG] Receiver::stop() complete" << std::endl;
 }
 
 void Receiver::handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port) {
@@ -308,7 +335,8 @@ void PerfectLinkApp::run() {
         sender_->waitUntilAllAcked();
         std::cout << "[DEBUG] All messages acked!" << std::endl;
     } else {
-        std::cout << "[DEBUG] Receiver mode, listening for messages" << std::endl;
+        std::cout << "[DEBUG] Receiver mode, listening for messages (will run until signal)" << std::endl;
+        // Receiver just starts background threads, main.cpp will handle signal waiting
     }
     
     std::cout << "[DEBUG] PerfectLinkApp::run() complete" << std::endl;
@@ -317,10 +345,18 @@ void PerfectLinkApp::run() {
 void PerfectLinkApp::shutdown() {
     std::cout << "[DEBUG] PerfectLinkApp::shutdown() started" << std::endl;
     
+    running_ = false;
+    
+    // Close sockets first to unblock receive() calls
+    std::cout << "[DEBUG] Closing sockets..." << std::endl;
+    receiver_socket_->close();
+    sender_socket_->close();
+    
+    // Now stop threads
     receiver_->stop();
     if (sender_ != nullptr) sender_->stop();
     
-    running_ = false;
+    // Detach receive thread
     if (receive_thread_.joinable()) receive_thread_.detach();
     
     std::cout << "[DEBUG] Flushing logger before exit" << std::endl;
@@ -330,6 +366,7 @@ void PerfectLinkApp::shutdown() {
 
 
 void PerfectLinkApp::receiveLoop() {
+    std::cout << "[DEBUG] receiveLoop started" << std::endl;
     while (running_) {
         try {
             auto [data, sender_ip, sender_port] = receiver_socket_->receive();
@@ -338,9 +375,13 @@ void PerfectLinkApp::receiveLoop() {
                 receiver_->handle(packet, sender_ip, sender_port);
             }
         } catch (const std::exception&) {
-            if (!running_) break;
+            if (!running_) {
+                std::cout << "[DEBUG] receiveLoop exiting due to !running_" << std::endl;
+                break;
+            }
         }
     }
+    std::cout << "[DEBUG] receiveLoop finished" << std::endl;
 }
 
 Host PerfectLinkApp::findHost(uint32_t id) const 

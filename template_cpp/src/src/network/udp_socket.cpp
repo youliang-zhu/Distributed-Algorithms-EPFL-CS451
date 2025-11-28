@@ -27,8 +27,10 @@ UDPSocket::~UDPSocket() {
     close();
 }
 
-void UDPSocket::close() {
-    if (socket_fd_ >= 0) {
+void UDPSocket::close() 
+{
+    if (socket_fd_ >= 0) 
+    {
         ::close(socket_fd_);
         socket_fd_ = -1;
     }

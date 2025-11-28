@@ -12,10 +12,6 @@ int main(int argc, char** argv)
     Parser parser(argc, argv);
     parser.parse();
     
-    std::cout << "[DEBUG] Parser: id=" << parser.id() 
-              << ", configPath=" << parser.configPath() 
-              << ", outputPath=" << parser.outputPath() << std::endl;
-    
     SignalHandler::setup();
     Config config = Config::parse(parser.configPath());
     
@@ -46,29 +42,22 @@ int main(int argc, char** argv)
       
       app.run();
       
-      // Senders exit after completing their task
-      // Receivers wait for signal
-      std::cout << "[DEBUG] app.isSender() = " << (app.isSender() ? "true" : "false") << std::endl;
-      if (app.isSender()) {
-          std::cout << "[DEBUG] Sender completed, shutting down..." << std::endl;
+      //如果是sender在run结束后已经确认所有acked，可以直接shutdown退出
+      if (app.isSender())
+      {
           app.shutdown();
-          std::cout << "Process " << parser.id() << ": Task completed, shutting down..." << std::endl;
-      } else {
-          std::cout << "[DEBUG] Receiver entering signal wait loop..." << std::endl;
+      } 
+      else 
+      //作为receiver，是不知道还有多少消息需要收的，只能等收到停止信号后再shutdown
+      {
           int wait_count = 0;
+          //SignalHandler::setup()会设置stop_flag_，捕捉SIGINT信号，这里每100ms检查一次是否收到停止信号
           while (!SignalHandler::shouldStop()) 
           {
-              wait_count++;
-              if (wait_count % 10 == 1) {  // Print every second (10 * 100ms)
-                  std::cout << "[DEBUG] Signal wait loop iteration #" << wait_count << std::endl;
-              }
               std::this_thread::sleep_for(std::chrono::milliseconds(100));
           }
-          std::cout << "[DEBUG] Signal received, exiting wait loop after " << wait_count << " iterations" << std::endl;
-          std::cout << "Process " << parser.id() << ": Task completed, shutting down..." << std::endl;
           app.shutdown();
       };
-        
     }
     else 
     {

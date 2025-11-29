@@ -26,7 +26,8 @@ enum class MessageType : uint8_t {
     NACK     = 0x22
 };
 
-struct PerfectLinkConfig {
+struct PerfectLinkConfig 
+{
     uint32_t m;
     uint32_t receiver_id;
     
@@ -35,14 +36,16 @@ struct PerfectLinkConfig {
         : m(m), receiver_id(receiver_id) {}
 };
 
-struct FIFOBroadcastConfig {
+struct FIFOBroadcastConfig 
+{
     uint32_t m;
     
     FIFOBroadcastConfig() : m(0) {}
     explicit FIFOBroadcastConfig(uint32_t m) : m(m) {}
 };
 
-struct LatticeAgreementConfig {
+struct LatticeAgreementConfig 
+{
     uint32_t proposals;
     uint32_t max_values;
     uint32_t distinct_values;
@@ -52,7 +55,8 @@ struct LatticeAgreementConfig {
         : proposals(0), max_values(0), distinct_values(0) {}
 };
 
-namespace Constants {
+namespace Constants 
+{
     constexpr uint32_t MAX_SEQ_NUMBER = 2147483647;  // 2^31 - 1
     constexpr size_t MAX_MESSAGES_PER_PACKET = 8;
     constexpr size_t MAX_UDP_PACKET_SIZE = 65507;    // 65535 - 8 (UDP header) - 20 (IP header)

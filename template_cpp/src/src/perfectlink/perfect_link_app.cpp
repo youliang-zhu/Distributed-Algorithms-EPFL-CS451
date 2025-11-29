@@ -49,15 +49,16 @@ void Sender::stop()
     if (send_thread_.joinable()) send_thread_.join();
 }
 
-void Sender::send(uint32_t seq_number) 
+void Sender::send(uint32_t original_sender_id, uint32_t seq_number) 
 {
     {
         std::lock_guard<std::mutex> lock(queue_mutex_);
-        pending_queue_.push(seq_number);
-        logger_->logBroadcast(seq_number);
+        pending_queue_.push({original_sender_id, seq_number});
+        if (original_sender_id == my_id_) 
+        {
+            logger_->logBroadcast(seq_number);
+        }
     }
-    //当外部调用send, 向pending_queue_ 成功加入一个新消息后，它调用 notify_one(), 
-    //如果此时 sendLoop() 线程正在 wait 上休眠，它会被唤醒，重新获取锁，检查队列非空的条件，然后开始发送数据。
     queue_cv_.notify_one();
 }
 
@@ -86,16 +87,12 @@ void Sender::sendLoop()
 {
     while (running_) 
     {
-        //sendloop线程获取queue_mutex_锁
         std::unique_lock<std::mutex> lock(queue_mutex_);
-        //如果 pending_queue_ 不为空或 running_ 为 false，线程立即退出等待，开始处理数据。
-        //如果 pending_queue_ 为空，线程释放锁，进入休眠/阻塞状态，直到被通知 (notify)
         queue_cv_.wait(lock, [this] { return !pending_queue_.empty() || !running_; });
         
         if (!running_) break;
         
-        std::vector<uint32_t> batch;
-        //当前pending_queue_不为空，也就是有东西要send，且batch未满时，一次性取出多个消息进行发送
+        std::vector<std::pair<uint32_t, uint32_t>> batch;
         while (!pending_queue_.empty() && batch.size() < MAX_BATCH_SIZE)
         {
             batch.push_back(pending_queue_.front());
@@ -108,18 +105,21 @@ void Sender::sendLoop()
         auto now = std::chrono::steady_clock::now();
         {
             std::lock_guard<std::mutex> data_lock(data_mutex_);
-            for (uint32_t seq : batch) 
+            for (const auto& [sender_id, seq] : batch) 
             {
-                //把batch中的每个消息都加入到unacked_messages_和timeout_queue_中
                 unacked_messages_[seq] = SentMessage(seq, now);
                 timeout_queue_.push({now + TIMEOUT, seq});
             }
         }
-        //新消息的超时信息添加到timeout_queue_中。如果此时 retransmitLoop() 正处于无限等待（因为之前队列为空），
-        //这个 notify_one() 会唤醒它，让它看到 timeout_queue_ 现在非空了。重新计算下一个超时的精确时间点，并进入该时间点的定时等待。
         timeout_cv_.notify_one();
         
-        Packet packet = Packet::createDataPacket(my_id_, batch);
+        std::vector<uint32_t> seq_batch;
+        uint32_t batch_sender_id = batch[0].first;
+        for (const auto& [sender_id, seq] : batch) {
+            seq_batch.push_back(seq);
+        }
+        
+        Packet packet = Packet::createDataPacket(batch_sender_id, seq_batch);
         socket_->send(receiver_.ip, receiver_.port, packet.serialize());
     }
 }
@@ -366,7 +366,7 @@ void PerfectLinkApp::run()
         sender_->start();
         for (uint32_t seq = 1; seq <= m_; seq++) 
         {
-            sender_->send(seq);
+            sender_->send(my_id_, seq);
         }
         logger_->flush();
         //单独线程阻塞等待所有消息被ack

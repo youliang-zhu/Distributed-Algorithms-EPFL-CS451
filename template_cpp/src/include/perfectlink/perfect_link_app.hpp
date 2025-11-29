@@ -46,7 +46,7 @@ public:
     
     void start();
     void stop();
-    void send(uint32_t seq_number);
+    void send(uint32_t original_sender_id, uint32_t seq_number);
     
     void waitUntilAllAcked();
     bool allMessagesAcked() const;
@@ -57,7 +57,7 @@ private:
     Host receiver_;
     Logger* logger_;
     
-    std::queue<uint32_t> pending_queue_;
+    std::queue<std::pair<uint32_t, uint32_t>> pending_queue_;
     std::map<uint32_t, SentMessage> unacked_messages_;
     std::priority_queue<TimeoutEntry, std::vector<TimeoutEntry>, std::greater<>> timeout_queue_;
     

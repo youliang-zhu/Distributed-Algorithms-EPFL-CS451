@@ -10,6 +10,7 @@ set(SOURCES
     src/network/message.cpp
     src/network/udp_socket.cpp
     src/perfectlink/perfect_link_app.cpp
+    src/fifobroadcast/fifo_broadcast_app.cpp
 )
 
 # DO NOT EDIT THE FOLLOWING LINES

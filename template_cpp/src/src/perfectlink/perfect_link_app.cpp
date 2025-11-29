@@ -8,13 +8,15 @@
 namespace milestone1 
 {
 
-// ============================================================================
+// ======================
 // Sender 
+// ======================
 
 Sender::Sender(UDPSocket* socket, uint32_t my_id, const Host& receiver, Logger* logger)
     : socket_(socket), my_id_(my_id), receiver_(receiver), logger_(logger), running_(false) {}
 
-Sender::~Sender() {
+Sender::~Sender() 
+{
     stop();
 }
 
@@ -201,9 +203,9 @@ void Sender::ackReceiveLoop()
     std::cout << "[DEBUG] ackReceiveLoop finished" << std::endl;
 }
 
-// ============================================================================
-// Receiver Implementation
-// ============================================================================
+// ====================
+// Receiver 
+// ====================
 
 Receiver::Receiver(UDPSocket* socket, Logger* logger)
     : socket_(socket), logger_(logger), flush_running_(false) {}
@@ -310,9 +312,9 @@ void Receiver::flushAllPendingAcks()
     pending_acks_.clear();
 }
 
-// ============================================================================
+// =============================
 // PerfectLinkApp Implementation
-// ============================================================================
+// =====================
 
 PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
                                uint32_t m, uint32_t receiver_id, const std::string& output_path)

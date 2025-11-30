@@ -16,45 +16,58 @@ static uint32_t read_uint32(const std::vector<uint8_t>& buffer, size_t& pos) {
     return value;
 }
 
-std::vector<uint8_t> Packet::serialize() const 
-{
+std::vector<uint8_t> Packet::serialize() const {
     std::vector<uint8_t> buffer;
     buffer.push_back(static_cast<uint8_t>(type));
-    if (type == MessageType::PERFECT_LINK_DATA) 
-    {
+    
+    if (type == MessageType::PERFECT_LINK_DATA) {
         write_uint32(buffer, sender_id);
-    }
-    buffer.push_back(static_cast<uint8_t>(seq_numbers.size()));
-    for (uint32_t seq : seq_numbers) {
-        write_uint32(buffer, seq);
+        buffer.push_back(static_cast<uint8_t>(seq_numbers.size()));
+        for (uint32_t seq : seq_numbers) {
+            write_uint32(buffer, seq);
+        }
+    } 
+    else if (type == MessageType::PERFECT_LINK_ACK) {
+        buffer.push_back(static_cast<uint8_t>(ack_payloads.size()));
+        for (const auto& item : ack_payloads) {
+            write_uint32(buffer, item.sender_id);
+            write_uint32(buffer, item.seq_number);
+        }
     }
     return buffer;
 }
 
-// packet的原始赋值通过反序列化函数实现
-Packet Packet::deserialize(const std::vector<uint8_t>& data) 
-{
+Packet Packet::deserialize(const std::vector<uint8_t>& data) {
     Packet packet;
     size_t pos = 0;
     
-    packet.type = static_cast<MessageType>(data[pos++]);
-    if (packet.type == MessageType::PERFECT_LINK_DATA) 
-    {
-        packet.sender_id = read_uint32(data, pos);
-    }
-    uint8_t count = data[pos++];
-
-    for (uint8_t i = 0; i < count; i++) 
-    {
-        uint32_t seq = read_uint32(data, pos);
-        packet.seq_numbers.push_back(seq);
-    }
+    if (pos >= data.size()) return packet;
     
+    packet.type = static_cast<MessageType>(data[pos++]);
+    
+    if (packet.type == MessageType::PERFECT_LINK_DATA) {
+        if (pos + 4 <= data.size()) packet.sender_id = read_uint32(data, pos);
+        if (pos < data.size()) {
+            uint8_t count = data[pos++];
+            for (uint8_t i = 0; i < count && pos + 4 <= data.size(); i++) {
+                packet.seq_numbers.push_back(read_uint32(data, pos));
+            }
+        }
+    } 
+    else if (packet.type == MessageType::PERFECT_LINK_ACK) {
+        if (pos < data.size()) {
+            uint8_t count = data[pos++];
+            for (uint8_t i = 0; i < count && pos + 8 <= data.size(); i++) {
+                uint32_t sid = read_uint32(data, pos);
+                uint32_t seq = read_uint32(data, pos);
+                packet.ack_payloads.push_back({sid, seq});
+            }
+        }
+    }
     return packet;
 }
 
-Packet Packet::createDataPacket(uint32_t sender_id, const std::vector<uint32_t>& seq_numbers) 
-{
+Packet Packet::createDataPacket(uint32_t sender_id, const std::vector<uint32_t>& seq_numbers) {
     Packet packet;
     packet.type = MessageType::PERFECT_LINK_DATA;
     packet.sender_id = sender_id;
@@ -62,11 +75,9 @@ Packet Packet::createDataPacket(uint32_t sender_id, const std::vector<uint32_t>&
     return packet;
 }
 
-Packet Packet::createAckPacket(const std::vector<uint32_t>& seq_numbers) 
-{
+Packet Packet::createAckPacket(const std::vector<AckItem>& acks) {
     Packet packet;
     packet.type = MessageType::PERFECT_LINK_ACK;
-    packet.sender_id = 0;  // Not used for ACK
-    packet.seq_numbers = seq_numbers;
+    packet.ack_payloads = acks;
     return packet;
 }

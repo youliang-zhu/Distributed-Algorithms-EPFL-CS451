@@ -15,11 +15,8 @@ namespace milestone2 {
 
 using MessageId = std::pair<uint32_t, uint32_t>;
 
-struct MessageIdHash {
-    std::size_t operator()(const MessageId& id) const {
-        return std::hash<uint32_t>()(id.first) ^ (std::hash<uint32_t>()(id.second) << 1);
-    }
-};
+// [Fix Memory] URB 历史记录窗口限制
+static constexpr size_t MAX_URB_WINDOW = 20000; 
 
 class FIFOBroadcastApp {
 public:
@@ -37,10 +34,9 @@ private:
     uint32_t n_processes_;
     uint32_t majority_;
     
-    std::map<uint32_t, milestone1::Sender*> senders_;
+    milestone1::UnifiedSender* unified_sender_;
     milestone1::Receiver* receiver_;
-    UDPSocket* receiver_socket_;
-    UDPSocket* sender_socket_;
+    UDPSocket* socket_;
     Logger* logger_;
     
     std::set<MessageId> forwarded_;
@@ -55,7 +51,7 @@ private:
     std::atomic<bool> running_;
     
     void receiveLoop();
-    void handlePacket(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
+    void onNewPLMessage(uint32_t sender_id, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port);
     void urbBroadcast(uint32_t sender_id, uint32_t seq);
     void fifoDeliver(uint32_t sender_id, uint32_t seq);
     
@@ -64,5 +60,4 @@ private:
 };
 
 }
-
 #endif

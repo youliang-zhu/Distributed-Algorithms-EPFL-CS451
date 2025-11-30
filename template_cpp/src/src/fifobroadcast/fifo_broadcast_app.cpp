@@ -1,5 +1,8 @@
 #include "fifobroadcast/fifo_broadcast_app.hpp"
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <iterator>
 
 namespace milestone2 {
 
@@ -7,48 +10,42 @@ FIFOBroadcastApp::FIFOBroadcastApp(uint32_t my_id, const std::vector<Host>& host
                                    uint32_t m, const std::string& output_path)
     : my_id_(my_id), hosts_(hosts), m_(m), running_(false) {
     
-    n_processes_ = hosts_.size();
+    n_processes_ = static_cast<uint32_t>(hosts_.size());
     majority_ = n_processes_ / 2 + 1;
     
     Host my_host = findHost(my_id_);
-    receiver_socket_ = new UDPSocket(my_host.port);
-    sender_socket_ = new UDPSocket(static_cast<uint16_t>(my_host.port + 1000));
-    
     logger_ = new Logger(output_path);
     
-    for (const Host& host : hosts_) {
-        if (host.id != my_id_) {
-            senders_[host.id] = new milestone1::Sender(sender_socket_, my_id_, host, logger_);
-        }
-    }
+    // Single Socket
+    socket_ = new UDPSocket(my_host.port);
     
-    receiver_ = new milestone1::Receiver(receiver_socket_, logger_);
+    unified_sender_ = new milestone1::UnifiedSender(socket_, hosts_, logger_);
+    receiver_ = new milestone1::Receiver(socket_, logger_);
     
-    for (const Host& host : hosts_) {
-        next_[host.id] = 1;
-    }
+    receiver_->setMessageHandler([this](uint32_t s, uint32_t seq, const std::string& ip, uint16_t port) {
+        this->onNewPLMessage(s, seq, ip, port);
+    });
+    
+    for (const Host& host : hosts_) next_[host.id] = 1;
 }
 
 FIFOBroadcastApp::~FIFOBroadcastApp() {
     shutdown();
-    for (auto& [id, sender] : senders_) {
-        delete sender;
-    }
+    delete unified_sender_;
     delete receiver_;
     delete logger_;
-    delete sender_socket_;
-    delete receiver_socket_;
+    delete socket_;
 }
 
 void FIFOBroadcastApp::run() {
     running_ = true;
-    
     receive_thread_ = std::thread(&FIFOBroadcastApp::receiveLoop, this);
-    receiver_->start();
     
-    for (auto& [id, sender] : senders_) {
-        sender->start();
-    }
+    receiver_->start();
+    unified_sender_->start();
+    
+    // Cold start wait
+    std::this_thread::sleep_for(std::chrono::milliseconds(900));
     
     for (uint32_t seq = 1; seq <= m_; seq++) {
         urbBroadcast(my_id_, seq);
@@ -60,15 +57,14 @@ void FIFOBroadcastApp::run() {
 void FIFOBroadcastApp::shutdown() {
     running_ = false;
     
-    receiver_socket_->close();
-    sender_socket_->close();
+    // 先关闭 Socket 触发 shutdown
+    if (socket_) socket_->close();
     
-    receiver_->stop();
-    for (auto& [id, sender] : senders_) {
-        sender->stop();
-    }
+    if (unified_sender_) unified_sender_->stop();
+    if (receiver_) receiver_->stop();
     
-    if (receive_thread_.joinable()) receive_thread_.detach();
+    // 使用 join 安全等待
+    if (receive_thread_.joinable()) receive_thread_.join();
     
     logger_->flush();
 }
@@ -78,32 +74,24 @@ void FIFOBroadcastApp::urbBroadcast(uint32_t sender_id, uint32_t seq) {
     
     {
         std::lock_guard<std::mutex> lock(receiver_state_mutex_);
+        if (sender_id == my_id_) logger_->logBroadcast(seq);
         
-        if (sender_id == my_id_) {
-            logger_->logBroadcast(seq);
-        }
-        
-        forwarded_.insert(msg_id);
         urb_ack_list_[msg_id].insert(my_id_);
-        
-        if (sender_id == my_id_) {
-            urb_ack_list_[msg_id].insert(sender_id);
-        }
+        if (sender_id == my_id_) urb_ack_list_[msg_id].insert(sender_id);
     }
     
-    for (auto& [target_id, sender] : senders_) {
-        sender->send(sender_id, seq);
+    for (const auto& host : hosts_) {
+        if (host.id != my_id_) {
+            unified_sender_->send(host.id, sender_id, seq);
+        }
     }
     
     {
         std::lock_guard<std::mutex> lock(receiver_state_mutex_);
-        
         if (urb_delivered_.count(msg_id)) return;
-        
         if (urb_ack_list_[msg_id].size() >= majority_) {
             urb_delivered_.insert(msg_id);
             urb_ack_list_.erase(msg_id);
-            
             fifoDeliver(sender_id, seq);
         }
     }
@@ -112,57 +100,75 @@ void FIFOBroadcastApp::urbBroadcast(uint32_t sender_id, uint32_t seq) {
 void FIFOBroadcastApp::receiveLoop() {
     while (running_) {
         try {
-            auto [data, sender_ip, sender_port] = receiver_socket_->receive();
+            auto [data, sender_ip, sender_port] = socket_->receive();
             Packet packet = Packet::deserialize(data);
+            
+            // Dispatch
             if (packet.type == MessageType::PERFECT_LINK_DATA) {
-                handlePacket(packet, sender_ip, sender_port);
+                receiver_->handleData(packet, sender_ip, sender_port);
+            } 
+            else if (packet.type == MessageType::PERFECT_LINK_ACK) {
+                uint32_t source_id = getProcessIdFromAddress(sender_ip, sender_port);
+                unified_sender_->processAck(source_id, packet.ack_payloads);
             }
-        } catch (const std::exception&) {
+        } catch (...) {
             if (!running_) break;
         }
     }
 }
 
-void FIFOBroadcastApp::handlePacket(const Packet& packet, const std::string& sender_ip, uint16_t sender_port) {
-    uint32_t udp_source_id = getProcessIdFromAddress(sender_ip, sender_port);
-    uint32_t original_sender = packet.sender_id;
+void FIFOBroadcastApp::onNewPLMessage(uint32_t original_sender, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port) {
+    MessageId msg_id = {original_sender, seq};
+    uint32_t udp_source_id = getProcessIdFromAddress(udp_source_ip, udp_source_port);
     
-    receiver_->handle(packet, sender_ip, sender_port);
+    bool should_forward = false;
+    bool should_deliver = false;
     
-    for (uint32_t seq : packet.seq_numbers) {
-        MessageId msg_id = {original_sender, seq};
+    {
+        std::lock_guard<std::mutex> lock(receiver_state_mutex_);
         
-        bool should_forward = false;
-        bool should_deliver = false;
-        
-        {
-            std::lock_guard<std::mutex> lock(receiver_state_mutex_);
-            
-            urb_ack_list_[msg_id].insert(udp_source_id);
+        urb_ack_list_[msg_id].insert(udp_source_id);
+        if (udp_source_id != original_sender) {
             urb_ack_list_[msg_id].insert(original_sender);
-            
-            if (forwarded_.find(msg_id) == forwarded_.end()) {
-                forwarded_.insert(msg_id);
-                should_forward = true;
-            }
-            
-            if (!urb_delivered_.count(msg_id) && urb_ack_list_[msg_id].size() >= majority_) {
-                urb_delivered_.insert(msg_id);
-                urb_ack_list_.erase(msg_id);
-                should_deliver = true;
-            }
         }
         
-        if (should_forward) {
-            for (auto& [target_id, sender] : senders_) {
-                sender->send(original_sender, seq);
-            }
+        // [Fix Memory 2] 清理 forwarded_ 集合
+        if (forwarded_.size() >= MAX_URB_WINDOW) {
+            auto it = forwarded_.begin();
+            std::advance(it, MAX_URB_WINDOW / 2);
+            forwarded_.erase(forwarded_.begin(), it);
+        }
+
+        if (forwarded_.find(msg_id) == forwarded_.end()) {
+            forwarded_.insert(msg_id);
+            should_forward = true;
         }
         
-        if (should_deliver) {
-            std::lock_guard<std::mutex> lock(receiver_state_mutex_);
-            fifoDeliver(original_sender, seq);
+        if (!urb_delivered_.count(msg_id) && urb_ack_list_[msg_id].size() >= majority_) {
+            // [Fix Memory 3] 清理 urb_delivered_ 集合
+            if (urb_delivered_.size() >= MAX_URB_WINDOW) {
+                auto it = urb_delivered_.begin();
+                std::advance(it, MAX_URB_WINDOW / 2);
+                urb_delivered_.erase(urb_delivered_.begin(), it);
+            }
+            
+            urb_delivered_.insert(msg_id);
+            urb_ack_list_.erase(msg_id);
+            should_deliver = true;
         }
+    }
+    
+    if (should_forward) {
+        for (const auto& host : hosts_) {
+            if (host.id != my_id_) {
+                unified_sender_->send(host.id, original_sender, seq);
+            }
+        }
+    }
+    
+    if (should_deliver) {
+        std::lock_guard<std::mutex> lock(receiver_state_mutex_);
+        fifoDeliver(original_sender, seq);
     }
 }
 
@@ -170,7 +176,6 @@ void FIFOBroadcastApp::fifoDeliver(uint32_t sender_id, uint32_t seq) {
     if (seq == next_[sender_id]) {
         logger_->logDelivery(sender_id, seq);
         next_[sender_id]++;
-        
         while (pending_[sender_id].count(next_[sender_id])) {
             uint32_t next_seq = next_[sender_id];
             logger_->logDelivery(sender_id, next_seq);
@@ -178,7 +183,10 @@ void FIFOBroadcastApp::fifoDeliver(uint32_t sender_id, uint32_t seq) {
             next_[sender_id]++;
         }
     } else {
-        pending_[sender_id][seq] = {sender_id, seq};
+        // 如果是旧消息 (seq < next)，因为内存清理重入，直接丢弃
+        if (seq > next_[sender_id]) {
+            pending_[sender_id][seq] = {sender_id, seq};
+        }
     }
 }
 
@@ -190,9 +198,8 @@ Host FIFOBroadcastApp::findHost(uint32_t id) const {
 }
 
 uint32_t FIFOBroadcastApp::getProcessIdFromAddress(const std::string& ip, uint16_t port) const {
-    uint16_t base_port = port >= 12000 ? port - 1000 : port;
     for (const Host& host : hosts_) {
-        if (host.port == base_port) return host.id;
+        if (host.port == port) return host.id;
     }
     return 0;
 }

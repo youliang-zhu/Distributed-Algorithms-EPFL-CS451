@@ -6,10 +6,17 @@
 #include <cstring>
 #include <stdexcept>
 #include <tuple>
+#include <iostream>
 
 UDPSocket::UDPSocket(uint16_t port) : port_(port) {
     socket_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
     if (socket_fd_ < 0) throw std::runtime_error("Failed to create socket");
+
+    // [Fix 1] 允许端口复用
+    int opt = 1;
+    if (setsockopt(socket_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        perror("setsockopt SO_REUSEADDR failed");
+    }
     
     sockaddr_in addr;
     std::memset(&addr, 0, sizeof(addr));
@@ -27,16 +34,15 @@ UDPSocket::~UDPSocket() {
     close();
 }
 
-void UDPSocket::close() 
-{
-    if (socket_fd_ >= 0) 
-    {
+void UDPSocket::close() {
+    if (socket_fd_ >= 0) {
+        // [Fix 2] Shutdown 强制唤醒 recvfrom
+        ::shutdown(socket_fd_, SHUT_RDWR);
         ::close(socket_fd_);
         socket_fd_ = -1;
     }
 }
 
-// 输入目标ip，端口，数据，使用sendto发送数据，不可靠传输，立即返回结果
 void UDPSocket::send(const std::string& ip, uint16_t port, const std::vector<uint8_t>& data) 
 {
     sockaddr_in dest_addr;
@@ -52,12 +58,21 @@ void UDPSocket::send(const std::string& ip, uint16_t port, const std::vector<uin
     ssize_t sent = sendto(socket_fd_, data.data(), data.size(), 0,
                           reinterpret_cast<sockaddr*>(&dest_addr), sizeof(dest_addr));
 
+    // [DIAG] 埋点：监控物理发送
+    if (sent > 0) {
+        // 只有当不是发给自己的时候才打印，减少日志噪音（可选，这里为了全量调试先全部打印）
+        std::cout << "[DIAG-NET] Socket " << port_ << " SENT " << sent << " bytes to " << ip << ":" << port << std::endl;
+    } else {
+        // 这里的错误通常意味着 Socket 已经关闭或者网络不可达
+        std::cerr << "[DIAG-ERR] Socket " << port_ << " SEND FAILED to " << ip << ":" << port << " errno=" << errno << std::endl;
+    }
+
     if (sent < 0) {
-        throw std::runtime_error("Failed to send data");
+        // 在 shutdown 后 send 可能会失败，这是预期的，不抛出异常以免 crash
+        // throw std::runtime_error("Failed to send data");
     }
 }
 
-// 创建一个buffer，用recvfrom阻塞接受数据，返回接收到的数据以及发送者的IP和端口
 std::tuple<std::vector<uint8_t>, std::string, uint16_t> UDPSocket::receive() 
 {
     std::vector<uint8_t> buffer(65536);
@@ -73,10 +88,13 @@ std::tuple<std::vector<uint8_t>, std::string, uint16_t> UDPSocket::receive()
     }
     buffer.resize(received);
     
-    //sender IP and port
     char ip_str[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &sender_addr.sin_addr, ip_str, INET_ADDRSTRLEN);
     uint16_t sender_port = ntohs(sender_addr.sin_port);
+    
+    // [DIAG] 埋点：监控物理接收
+    // 这能证明数据包是否真的到达了进程的 Socket 缓冲区
+    std::cout << "[DIAG-NET] Socket " << port_ << " RECV " << received << " bytes from " << ip_str << ":" << sender_port << std::endl;
     
     return std::make_tuple(buffer, std::string(ip_str), sender_port);
 }

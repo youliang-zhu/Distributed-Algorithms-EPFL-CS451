@@ -220,12 +220,6 @@ fi
 SUBMISSION_SIZE=$(du -h submission.zip | cut -f1)
 echo -e "${GREEN}✓ submission.zip created successfully (${SUBMISSION_SIZE})${NC}"
 
-# Step 5: Create test.txt file
-echo -e "\n${BLUE}Step 5: Creating test.txt file...${NC}"
-
-echo "$TEST_CASE" > test.txt
-echo -e "${GREEN}✓ test.txt created with test case: $TEST_CASE${NC}"
-
 # Step 6: Verify zip contents
 echo -e "\n${BLUE}Step 6: Verifying submission contents...${NC}"
 

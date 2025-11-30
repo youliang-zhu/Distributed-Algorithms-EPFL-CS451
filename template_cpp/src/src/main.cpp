@@ -32,8 +32,8 @@ int main(int argc, char** argv)
           );
       }
 
-      // create pl class, input id and host parse from command, load m and id from config file
-      milestone1::PerfectLinkApp app(
+      milestone1::PerfectLinkApp app
+      (
           static_cast<uint32_t>(parser.id()),
           hosts,
           pl_config.m,
@@ -75,7 +75,8 @@ int main(int argc, char** argv)
           );
       }
 
-      milestone2::FIFOBroadcastApp app(
+      milestone2::FIFOBroadcastApp app
+      (
           static_cast<uint32_t>(parser.id()),
           hosts,
           fifo_config.m,

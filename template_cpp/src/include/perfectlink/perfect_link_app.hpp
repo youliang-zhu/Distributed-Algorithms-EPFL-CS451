@@ -11,26 +11,40 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <vector>
 #include <chrono>
 #include <condition_variable>
+#include <functional>
 
 namespace milestone1 
 {
 
-struct SentMessage 
-{
+using MessageHandler = std::function<void(uint32_t sender_id, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port)>;
+
+// 常量定义
+static constexpr size_t MAX_BATCH_SIZE = 8;
+static constexpr std::chrono::milliseconds RETRANSMIT_TIMEOUT{50};
+static constexpr std::chrono::milliseconds ACK_FLUSH_TIMEOUT{10}; 
+// PL 层去重窗口限制
+static constexpr size_t MAX_DELIVERED_WINDOW = 20000; 
+
+// --- Unified Sender Structures ---
+struct PendingMessage {
+    uint32_t target_id;
+    uint32_t original_sender_id;
     uint32_t seq_number;
-    std::chrono::steady_clock::time_point last_sent;
-    uint32_t retransmit_count;
-    
-    SentMessage() : seq_number(0), retransmit_count(0) {}
-    SentMessage(uint32_t seq, std::chrono::steady_clock::time_point time)
-        : seq_number(seq), last_sent(time), retransmit_count(0) {}
 };
 
-struct TimeoutEntry 
-{
+struct UnackedMessage {
+    uint32_t original_sender_id;
+    uint32_t seq_number;
+    std::chrono::steady_clock::time_point last_sent;
+};
+
+struct TimeoutEntry {
     std::chrono::steady_clock::time_point timeout_time;
+    uint32_t target_id;
+    uint32_t original_sender_id;
     uint32_t seq_number;
     
     bool operator>(const TimeoutEntry& other) const {
@@ -38,45 +52,40 @@ struct TimeoutEntry
     }
 };
 
-class Sender 
+class UnifiedSender 
 {
 public:
-    Sender(UDPSocket* socket, uint32_t my_id, const Host& receiver, Logger* logger);
-    ~Sender();
+    UnifiedSender(UDPSocket* socket, const std::vector<Host>& neighbors, Logger* logger);
+    ~UnifiedSender();
     
     void start();
     void stop();
-    void send(uint32_t original_sender_id, uint32_t seq_number);
     
-    void waitUntilAllAcked();
-    bool allMessagesAcked() const;
+    void send(uint32_t target_id, uint32_t original_sender_id, uint32_t seq_number);
+    void processAck(uint32_t source_id, const std::vector<AckItem>& acks);
 
 private:
     UDPSocket* socket_;
-    uint32_t my_id_;
-    Host receiver_;
+    std::map<uint32_t, Host> routing_table_;
     Logger* logger_;
     
-    std::queue<std::pair<uint32_t, uint32_t>> pending_queue_;
-    std::map<uint32_t, SentMessage> unacked_messages_;
-    std::priority_queue<TimeoutEntry, std::vector<TimeoutEntry>, std::greater<>> timeout_queue_;
+    std::queue<PendingMessage> send_queue_;
     
-    mutable std::mutex queue_mutex_;
-    mutable std::mutex data_mutex_;
-    std::condition_variable queue_cv_;
-    std::condition_variable timeout_cv_;
+    using MsgKey = std::pair<uint32_t, uint32_t>; // <OrigSender, Seq>
+    std::map<uint32_t, std::map<MsgKey, UnackedMessage>> unacked_window_;
+    
+    std::priority_queue<TimeoutEntry, std::vector<TimeoutEntry>, std::greater<TimeoutEntry>> timeout_queue_;
+    
+    std::mutex mutex_;
+    std::condition_variable cv_send_;
+    std::condition_variable cv_retransmit_;
     
     std::thread send_thread_;
     std::thread retransmit_thread_;
-    std::thread ack_receive_thread_;
     std::atomic<bool> running_;
-    
-    static constexpr std::chrono::milliseconds TIMEOUT{50};
-    static constexpr size_t MAX_BATCH_SIZE = 16;
     
     void sendLoop();
     void retransmitLoop();
-    void ackReceiveLoop();
 };
 
 class Receiver 
@@ -87,27 +96,26 @@ public:
     
     void start();
     void stop();
-    void handle(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
-    void flushAllPendingAcks();
+    
+    void handleData(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
+    void setMessageHandler(MessageHandler handler);
 
 private:
     void flushLoop();
 
     UDPSocket* socket_;
     Logger* logger_;
+    MessageHandler message_handler_;
     
-    std::map<uint32_t, std::set<uint32_t>> delivered_messages_;
-    std::map<std::string, std::vector<uint32_t>> pending_acks_;
+    std::map<uint32_t, std::set<uint32_t>> delivered_;
+    std::map<std::string, std::vector<AckItem>> pending_acks_;
     
     std::mutex mtx_;
     std::thread flush_thread_;
     std::atomic<bool> flush_running_;
-    
-    static constexpr size_t MAX_DELIVERED_WINDOW = 10000;
-    static constexpr size_t ACK_BATCH_SIZE = 8;
-    static constexpr std::chrono::milliseconds ACK_FLUSH_TIMEOUT{1};
 };
 
+// [新增] PerfectLinkApp 类，为了兼容 main.cpp
 class PerfectLinkApp 
 {
 public:
@@ -117,7 +125,7 @@ public:
     
     void run();
     void shutdown();
-    bool isSender() const { return sender_ != nullptr; }
+    bool isSender() const; // main.cpp 需要此接口
 
 private:
     uint32_t my_id_;
@@ -125,9 +133,9 @@ private:
     uint32_t m_;
     uint32_t receiver_id_;
     
-    UDPSocket* receiver_socket_;
-    UDPSocket* sender_socket_;
-    Sender* sender_;
+    // 使用新架构组件
+    UDPSocket* socket_;
+    UnifiedSender* unified_sender_;
     Receiver* receiver_;
     Logger* logger_;
     
@@ -136,6 +144,7 @@ private:
     
     void receiveLoop();
     Host findHost(uint32_t id) const;
+    uint32_t getProcessIdFromAddress(const std::string& ip, uint16_t port) const;
 };
 
 }

@@ -51,7 +51,6 @@ void Logger::flushInternal()
     std::ofstream file(output_path_, std::ios::app);
     if (!file.is_open()) 
     {
-        std::cerr << "[DEBUG] Logger: Failed to open file: " << output_path_ << std::endl;
         return;
     }
     
@@ -61,6 +60,5 @@ void Logger::flushInternal()
     }
     
     file.close();
-    std::cout << "[DEBUG] Logger: Flushed " << buffer_.size() << " lines to " << output_path_ << std::endl;
     buffer_.clear();
 }

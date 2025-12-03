@@ -4,7 +4,7 @@
 
 namespace milestone1 {
 
-// ================= Unified Sender Implementation =================
+//=================Unified Sender Implementation=================
 
 UnifiedSender::UnifiedSender(UDPSocket* socket, const std::vector<Host>& neighbors, Logger* logger)
     : socket_(socket), logger_(logger), running_(false)
@@ -16,13 +16,15 @@ UnifiedSender::UnifiedSender(UDPSocket* socket, const std::vector<Host>& neighbo
 
 UnifiedSender::~UnifiedSender() { stop(); }
 
-void UnifiedSender::start() {
+void UnifiedSender::start() 
+{
     running_ = true;
     send_thread_ = std::thread(&UnifiedSender::sendLoop, this);
     retransmit_thread_ = std::thread(&UnifiedSender::retransmitLoop, this);
 }
 
-void UnifiedSender::stop() {
+void UnifiedSender::stop() 
+{
     running_ = false;
     cv_send_.notify_all();
     cv_retransmit_.notify_all();
@@ -30,7 +32,8 @@ void UnifiedSender::stop() {
     if (retransmit_thread_.joinable()) retransmit_thread_.join();
 }
 
-void UnifiedSender::send(uint32_t target_id, uint32_t original_sender_id, uint32_t seq_number) {
+void UnifiedSender::send(uint32_t target_id, uint32_t original_sender_id, uint32_t seq_number) 
+{
     {
         std::lock_guard<std::mutex> lock(mutex_);
         send_queue_.push({target_id, original_sender_id, seq_number});
@@ -38,7 +41,8 @@ void UnifiedSender::send(uint32_t target_id, uint32_t original_sender_id, uint32
     cv_send_.notify_one();
 }
 
-void UnifiedSender::processAck(uint32_t source_id, const std::vector<AckItem>& acks) {
+void UnifiedSender::processAck(uint32_t source_id, const std::vector<AckItem>& acks) 
+{
     std::lock_guard<std::mutex> lock(mutex_);
     auto target_it = unacked_window_.find(source_id);
     if (target_it == unacked_window_.end()) return;
@@ -49,18 +53,22 @@ void UnifiedSender::processAck(uint32_t source_id, const std::vector<AckItem>& a
     }
 }
 
-void UnifiedSender::sendLoop() {
-    while (running_) {
+void UnifiedSender::sendLoop() 
+{
+    while (running_) 
+    {
         std::vector<PendingMessage> batch;
         {
             std::unique_lock<std::mutex> lock(mutex_);
             cv_send_.wait(lock, [this] { return !send_queue_.empty() || !running_; });
             if (!running_) break;
 
-            while (!send_queue_.empty() && batch.size() < MAX_BATCH_SIZE) {
+            while (!send_queue_.empty() && batch.size() < MAX_BATCH_SIZE) 
+            {
                 const auto& front = send_queue_.front();
                 if (!batch.empty() && (batch[0].target_id != front.target_id || 
-                                       batch[0].original_sender_id != front.original_sender_id)) {
+                                       batch[0].original_sender_id != front.original_sender_id)) 
+                {
                     break;
                 }
                 batch.push_back(front);
@@ -74,7 +82,6 @@ void UnifiedSender::sendLoop() {
         uint32_t target = batch[0].target_id;
         uint32_t orig = batch[0].original_sender_id;
         std::vector<uint32_t> seqs;
-
         {
             std::lock_guard<std::mutex> lock(mutex_);
             for (const auto& msg : batch) {
@@ -86,7 +93,8 @@ void UnifiedSender::sendLoop() {
         }
         cv_retransmit_.notify_one();
 
-        if (routing_table_.find(target) != routing_table_.end()) {
+        if (routing_table_.find(target) != routing_table_.end()) 
+        {
             auto& host = routing_table_[target];
             Packet pkt = Packet::createDataPacket(orig, seqs);
             try {
@@ -96,8 +104,10 @@ void UnifiedSender::sendLoop() {
     }
 }
 
-void UnifiedSender::retransmitLoop() {
-    while (running_) {
+void UnifiedSender::retransmitLoop() 
+{
+    while (running_) 
+    {
         std::unique_lock<std::mutex> lock(mutex_);
         if (timeout_queue_.empty()) {
             cv_retransmit_.wait(lock, [this] { return !timeout_queue_.empty() || !running_; });
@@ -125,46 +135,52 @@ void UnifiedSender::retransmitLoop() {
             
             Packet pkt = Packet::createDataPacket(top.original_sender_id, {top.seq_number});
             
-            if (routing_table_.find(top.target_id) != routing_table_.end()) {
+            if (routing_table_.find(top.target_id) != routing_table_.end()) 
+            {
                 auto& host = routing_table_[top.target_id];
                 lock.unlock();
-                try {
+                try 
+                {
                     socket_->send(host.ip, host.port, pkt.serialize());
-                } catch(...) {}
+                } 
+                catch(...) {}
                 lock.lock();
             }
         }
     }
 }
 
-// ================= Receiver Implementation =================
+//=================Receiver Implementation=================
 
 Receiver::Receiver(UDPSocket* socket, Logger* logger) 
     : socket_(socket), logger_(logger), flush_running_(false) {}
 
 Receiver::~Receiver() { stop(); }
 
-void Receiver::start() {
+void Receiver::start() 
+{
     flush_running_ = true;
     flush_thread_ = std::thread(&Receiver::flushLoop, this);
 }
 
-void Receiver::stop() {
+void Receiver::stop() 
+{
     flush_running_ = false;
     if (flush_thread_.joinable()) flush_thread_.join();
 }
 
 void Receiver::setMessageHandler(MessageHandler handler) { message_handler_ = handler; }
 
+void Receiver::setAckHandler(AckHandler handler) { ack_handler_ = handler; }
+
 void Receiver::handleData(const Packet& packet, const std::string& sender_ip, uint16_t sender_port) 
 {
-    // [DIAG] 埋点：监控应用层处理
-    // 这里的 packet.sender_id 是原始发送者 ID (Original Sender)
-    // sender_ip/port 是物理上一跳发送者 (Immediate Sender)
-    std::cout << "[DIAG-APP] Receiver processing DATA from OrigSender=" << packet.sender_id 
-              << " (Physical Source: " << sender_ip << ":" << sender_port << ")" << std::endl;
-
     std::string key = sender_ip + ":" + std::to_string(static_cast<unsigned int>(sender_port));
+    
+    //从P:port 解析出 udp_source_id（用于 ack_handler）
+    uint32_t udp_source_id = 0;
+    size_t colon = sender_ip.rfind(':');
+    //简化：直接通过port查找（需要在上层设置）
     
     std::lock_guard<std::mutex> lock(mtx_);
     
@@ -172,9 +188,7 @@ void Receiver::handleData(const Packet& packet, const std::string& sender_ip, ui
     {
         // 始终 ACK
         pending_acks_[key].push_back({packet.sender_id, seq});
-        
         auto& delivered_set = delivered_[packet.sender_id];
-        
         // 内存清理
         if (delivered_set.size() >= MAX_DELIVERED_WINDOW) 
         {
@@ -183,7 +197,15 @@ void Receiver::handleData(const Packet& packet, const std::string& sender_ip, ui
             delivered_set.erase(delivered_set.begin(), it);
         }
 
-        if (delivered_set.insert(seq).second) 
+        bool is_new = delivered_set.insert(seq).second;
+        
+        // 总是调用 ack_handler（用于 URB 收集 ACK）
+        if (ack_handler_) 
+        {
+            ack_handler_(packet.sender_id, seq, sender_ip, sender_port);
+        }
+
+        if (is_new) 
         {
             if (message_handler_) 
             {
@@ -198,26 +220,31 @@ void Receiver::handleData(const Packet& packet, const std::string& sender_ip, ui
     }
 }
 
-void Receiver::flushLoop() {
+void Receiver::flushLoop() 
+{
     while (flush_running_) {
         std::this_thread::sleep_for(ACK_FLUSH_TIMEOUT);
         
         std::lock_guard<std::mutex> lock(mtx_);
-        for (auto& [key, ack_list] : pending_acks_) {
+        for (auto& [key, ack_list] : pending_acks_) 
+        {
             if (ack_list.empty()) continue;
             
             size_t colon_pos = key.find(':');
             std::string ip = key.substr(0, colon_pos);
             uint16_t port = static_cast<uint16_t>(std::stoul(key.substr(colon_pos + 1)));
             
-            while (!ack_list.empty()) {
+            while (!ack_list.empty()) 
+            {
                 size_t batch_size = std::min(ack_list.size(), MAX_BATCH_SIZE);
                 std::vector<AckItem> batch(ack_list.begin(), ack_list.begin() + batch_size);
                 
                 Packet ack = Packet::createAckPacket(batch);
-                try {
+                try 
+                {
                     socket_->send(ip, port, ack.serialize());
-                } catch(...) {}
+                } 
+                catch(...) {}
                 
                 ack_list.erase(ack_list.begin(), ack_list.begin() + batch_size);
             }
@@ -225,7 +252,7 @@ void Receiver::flushLoop() {
     }
 }
 
-// ================= PerfectLinkApp Implementation =================
+//=================PerfectLinkApp Implementation=================
 
 PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
                                uint32_t m, uint32_t receiver_id, const std::string& output_path)
@@ -242,7 +269,8 @@ PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
     // M1 不需要设置 MessageHandler，让 Receiver 默认打日志即可
 }
 
-PerfectLinkApp::~PerfectLinkApp() {
+PerfectLinkApp::~PerfectLinkApp() 
+{
     shutdown();
     delete unified_sender_;
     delete receiver_;
@@ -250,7 +278,8 @@ PerfectLinkApp::~PerfectLinkApp() {
     delete socket_;
 }
 
-bool PerfectLinkApp::isSender() const {
+bool PerfectLinkApp::isSender() const
+{
     return my_id_ != receiver_id_;
 }
 
@@ -278,7 +307,8 @@ void PerfectLinkApp::run() {
     }
 }
 
-void PerfectLinkApp::shutdown() {
+void PerfectLinkApp::shutdown() 
+{
     running_ = false;
     if (socket_) socket_->close();
     if (unified_sender_) unified_sender_->stop();
@@ -287,7 +317,8 @@ void PerfectLinkApp::shutdown() {
     logger_->flush();
 }
 
-void PerfectLinkApp::receiveLoop() {
+void PerfectLinkApp::receiveLoop() 
+{
     while (running_) {
         try {
             auto [data, sender_ip, sender_port] = socket_->receive();
@@ -306,7 +337,8 @@ void PerfectLinkApp::receiveLoop() {
     }
 }
 
-Host PerfectLinkApp::findHost(uint32_t id) const {
+Host PerfectLinkApp::findHost(uint32_t id) const 
+{
     for (const Host& host : hosts_) {
         if (host.id == id) return host;
     }
@@ -314,7 +346,8 @@ Host PerfectLinkApp::findHost(uint32_t id) const {
 }
 
 uint32_t PerfectLinkApp::getProcessIdFromAddress(const std::string& ip, uint16_t port) const {
-    for (const Host& host : hosts_) {
+    for (const Host& host : hosts_) 
+    {
         if (host.port == port) return host.id;
     }
     return 0;

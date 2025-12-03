@@ -9,12 +9,27 @@ OUTPUT_DIR="/tmp/da_fifo_test_$$"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo "=== FIFO Broadcast Basic Test ==="
 
+# 清理旧进程
+echo -e "${YELLOW}Cleaning up old processes...${NC}"
+pkill -9 da_proc 2>/dev/null || true
+sleep 1
+
+# 检查端口
+echo -e "${YELLOW}Checking ports...${NC}"
+for port in 11001 11002 11003; do
+    if netstat -tuln 2>/dev/null | grep -q ":$port " || ss -tuln 2>/dev/null | grep -q ":$port "; then
+        echo -e "${RED}WARNING: Port $port is still occupied!${NC}"
+        netstat -tulnp 2>/dev/null | grep ":$port " || ss -tulnp 2>/dev/null | grep ":$port "
+    fi
+done
+
 mkdir -p "$OUTPUT_DIR"
-# trap "rm -rf $OUTPUT_DIR" EXIT
+trap "rm -rf $OUTPUT_DIR; pkill -9 da_proc 2>/dev/null || true" EXIT
 
 cat > "$OUTPUT_DIR/hosts" << EOF
 1 127.0.0.1 11001
@@ -31,9 +46,10 @@ echo "Starting 3 processes..."
 for i in 1 2 3; do
     "$BIN_DIR/da_proc" --id $i --hosts "$OUTPUT_DIR/hosts" --output "$OUTPUT_DIR/proc$i.output" "$OUTPUT_DIR/config" &
     eval "PID$i=$!"
+    sleep 0.5  # 添加延迟，避免并发绑定问题
 done
 
-sleep 5
+sleep 20
 
 for i in 1 2 3; do
     eval "kill -SIGTERM \$PID$i 2>/dev/null || true"

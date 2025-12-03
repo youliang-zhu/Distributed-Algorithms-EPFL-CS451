@@ -19,7 +19,12 @@
 namespace milestone1 
 {
 
+// 新消息回调：只在第一次收到时调用
 using MessageHandler = std::function<void(uint32_t sender_id, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port)>;
+
+// ACK 回调：每次收到消息都调用（包括重复的），用于 URB 收集 ACK
+// 参数：original_sender_id, seq, udp_source_ip, udp_source_port
+using AckHandler = std::function<void(uint32_t sender_id, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port)>;
 
 // 常量定义
 static constexpr size_t MAX_BATCH_SIZE = 8;
@@ -28,8 +33,8 @@ static constexpr std::chrono::milliseconds ACK_FLUSH_TIMEOUT{10};
 // PL 层去重窗口限制
 static constexpr size_t MAX_DELIVERED_WINDOW = 20000; 
 
-// --- Unified Sender Structures ---
-struct PendingMessage {
+struct PendingMessage 
+{
     uint32_t target_id;
     uint32_t original_sender_id;
     uint32_t seq_number;
@@ -99,6 +104,7 @@ public:
     
     void handleData(const Packet& packet, const std::string& sender_ip, uint16_t sender_port);
     void setMessageHandler(MessageHandler handler);
+    void setAckHandler(AckHandler handler);  // URB 收集 ACK
 
 private:
     void flushLoop();
@@ -106,6 +112,7 @@ private:
     UDPSocket* socket_;
     Logger* logger_;
     MessageHandler message_handler_;
+    AckHandler ack_handler_;
     
     std::map<uint32_t, std::set<uint32_t>> delivered_;
     std::map<std::string, std::vector<AckItem>> pending_acks_;
@@ -115,7 +122,7 @@ private:
     std::atomic<bool> flush_running_;
 };
 
-// [新增] PerfectLinkApp 类，为了兼容 main.cpp
+// PerfectLinkApp 类，为了兼容main
 class PerfectLinkApp 
 {
 public:
@@ -125,7 +132,7 @@ public:
     
     void run();
     void shutdown();
-    bool isSender() const; // main.cpp 需要此接口
+    bool isSender() const; // maincpp需要此接口
 
 private:
     uint32_t my_id_;
@@ -133,12 +140,11 @@ private:
     uint32_t m_;
     uint32_t receiver_id_;
     
-    // 使用新架构组件
+    //使用新架构组件
     UDPSocket* socket_;
     UnifiedSender* unified_sender_;
     Receiver* receiver_;
     Logger* logger_;
-    
     std::thread receive_thread_;
     std::atomic<bool> running_;
     

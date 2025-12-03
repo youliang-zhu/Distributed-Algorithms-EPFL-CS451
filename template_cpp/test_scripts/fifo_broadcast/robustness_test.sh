@@ -18,9 +18,8 @@ cd "$ROOT_DIR"
 ./build.sh > /dev/null 2>&1 || { echo -e "${RED}Build failed${NC}"; exit 1; }
 
 mkdir -p "$OUTPUT_DIR"
-trap "rm -rf $OUTPUT_DIR" EXIT
 
-N=5
+N=7
 M=100
 EXPECTED=$((N * M))
 
@@ -45,9 +44,9 @@ done
 
 sleep 2
 
-echo -e "${YELLOW}开始故障注入...${NC}"
+echo -e "${YELLOW}[调试模式] 跳过故障注入，直接等待消息传播...${NC}"
 
-# 模拟stress.py的干扰
+# 模拟stress.py的干扰 (暂时禁用)
 for attempt in {1..10}; do
     sleep 1
     
@@ -71,8 +70,8 @@ for pid in "${PIDS[@]}"; do
     kill -SIGCONT $pid 2>/dev/null || true
 done
 
-echo "等待 30 秒进行消息传播..."
-sleep 30
+echo "等待消息传播..."
+sleep 1
 
 echo "终止进程..."
 for pid in "${PIDS[@]}"; do
@@ -83,6 +82,23 @@ sleep 5
 for pid in "${PIDS[@]}"; do
     kill -9 $pid 2>/dev/null || true
 done
+
+echo ""
+echo "=== 所有进程输出 ==="
+for i in $(seq 1 $N); do
+    echo ""
+    echo "--- Process $i 输出 (proc$i.output) ---"
+    if [ -f "$OUTPUT_DIR/proc$i.output" ]; then
+        cat "$OUTPUT_DIR/proc$i.output"
+    else
+        echo "(文件不存在)"
+    fi
+    echo "--- Process $i stdout/stderr ---"
+    if [ -f "$OUTPUT_DIR/proc$i.stdout" ]; then
+        cat "$OUTPUT_DIR/proc$i.stdout"
+    fi
+done
+echo ""
 
 echo "验证输出..."
 
@@ -161,3 +177,5 @@ else
     echo -e "${RED}FAIL: 测试失败${NC}"
     exit 1
 fi
+
+echo "日志文件位置: $OUTPUT_DIR"

@@ -15,10 +15,11 @@ namespace milestone2 {
 
 using MessageId = std::pair<uint32_t, uint32_t>;
 
-// [Fix Memory] URB 历史记录窗口限制
+//URB历史记录窗口限制
 static constexpr size_t MAX_URB_WINDOW = 20000; 
 
-class FIFOBroadcastApp {
+class FIFOBroadcastApp 
+{
 public:
     FIFOBroadcastApp(uint32_t my_id, const std::vector<Host>& hosts,
                      uint32_t m, const std::string& output_path);
@@ -42,7 +43,6 @@ private:
     std::set<MessageId> forwarded_;
     std::map<MessageId, std::set<uint32_t>> urb_ack_list_;
     std::set<MessageId> urb_delivered_;
-    
     std::map<uint32_t, uint32_t> next_;
     std::map<uint32_t, std::map<uint32_t, MessageId>> pending_;
     
@@ -52,8 +52,10 @@ private:
     
     void receiveLoop();
     void onNewPLMessage(uint32_t sender_id, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port);
+    void onPLAck(uint32_t sender_id, uint32_t seq, const std::string& udp_source_ip, uint16_t udp_source_port);
     void urbBroadcast(uint32_t sender_id, uint32_t seq);
     void fifoDeliver(uint32_t sender_id, uint32_t seq);
+    void tryDeliver(uint32_t sender_id, uint32_t seq);  //检查是否可以交付
     
     Host findHost(uint32_t id) const;
     uint32_t getProcessIdFromAddress(const std::string& ip, uint16_t port) const;

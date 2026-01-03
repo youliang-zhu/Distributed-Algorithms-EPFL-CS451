@@ -49,6 +49,7 @@ void FIFOBroadcastApp::run()
 {
     running_ = true;
     receive_thread_ = std::thread(&FIFOBroadcastApp::receiveLoop, this);
+    
     receiver_->start();
     unified_sender_->start();
     
@@ -218,6 +219,11 @@ void FIFOBroadcastApp::onPLAck(uint32_t original_sender, uint32_t seq, const std
         
         urb_delivered_.insert(msg_id);
         urb_ack_list_.erase(msg_id);
+        fifoDeliver(original_sender, seq);
+    }
+    
+    if (should_deliver) {
+        std::lock_guard<std::mutex> lock(receiver_state_mutex_);
         fifoDeliver(original_sender, seq);
     }
 }

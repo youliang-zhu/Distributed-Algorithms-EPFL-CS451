@@ -81,5 +81,9 @@ std::tuple<std::vector<uint8_t>, std::string, uint16_t> UDPSocket::receive()
     inet_ntop(AF_INET, &sender_addr.sin_addr, ip_str, INET_ADDRSTRLEN);
     uint16_t sender_port = ntohs(sender_addr.sin_port);
     
+    // [DIAG] 埋点：监控物理接收
+    // 这能证明数据包是否真的到达了进程的 Socket 缓冲区
+    std::cout << "[DIAG-NET] Socket " << port_ << " RECV " << received << " bytes from " << ip_str << ":" << sender_port << std::endl;
+    
     return std::make_tuple(buffer, std::string(ip_str), sender_port);
 }

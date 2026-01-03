@@ -226,8 +226,7 @@ void Receiver::flushLoop()
         std::this_thread::sleep_for(ACK_FLUSH_TIMEOUT);
         
         std::lock_guard<std::mutex> lock(mtx_);
-        for (auto& [key, ack_list] : pending_acks_) 
-        {
+        for (auto& [key, ack_list] : pending_acks_) {
             if (ack_list.empty()) continue;
             
             size_t colon_pos = key.find(':');
@@ -269,8 +268,7 @@ PerfectLinkApp::PerfectLinkApp(uint32_t my_id, const std::vector<Host>& hosts,
     // M1 不需要设置 MessageHandler，让 Receiver 默认打日志即可
 }
 
-PerfectLinkApp::~PerfectLinkApp() 
-{
+PerfectLinkApp::~PerfectLinkApp() {
     shutdown();
     delete unified_sender_;
     delete receiver_;
@@ -348,6 +346,13 @@ Host PerfectLinkApp::findHost(uint32_t id) const
 uint32_t PerfectLinkApp::getProcessIdFromAddress(const std::string& ip, uint16_t port) const {
     for (const Host& host : hosts_) 
     {
+        if (host.port == port) return host.id;
+    }
+    return 0;
+}
+
+uint32_t PerfectLinkApp::getProcessIdFromAddress(const std::string& ip, uint16_t port) const {
+    for (const Host& host : hosts_) {
         if (host.port == port) return host.id;
     }
     return 0;

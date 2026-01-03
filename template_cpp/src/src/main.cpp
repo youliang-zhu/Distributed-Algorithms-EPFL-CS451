@@ -1,12 +1,13 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include <iostream> 
+#include <iostream>
 #include "parser.hpp"
 #include "common/signal_handler.hpp"
 #include "common/config.hpp"
 #include "perfectlink/perfect_link_app.hpp"
 #include "fifobroadcast/fifo_broadcast_app.hpp"
+#include "lattice/lattice_agreement_app.hpp"
 
 int main(int argc, char** argv) 
 {
@@ -85,17 +86,48 @@ int main(int argc, char** argv)
       
       app.run();
       
-      while (!SignalHandler::shouldStop()) 
+      while (!SignalHandler::shouldStop())
       {
           std::this_thread::sleep_for(std::chrono::milliseconds(100));
       }
       app.shutdown();
     }
-    else 
+    else if (config.getType() == ConfigType::LATTICE_AGREEMENT)
+    {
+      auto la_config = config.getLatticeAgreementConfig();
+
+      auto parser_hosts = parser.hosts();
+      std::vector<Host> hosts;
+      for (const auto& ph : parser_hosts)
+      {
+          hosts.emplace_back(
+              static_cast<uint32_t>(ph.id),
+              ph.ipReadable(),
+              ph.portReadable()
+          );
+      }
+
+      milestone3::LatticeAgreementApp app
+      (
+          static_cast<uint32_t>(parser.id()),
+          hosts,
+          la_config,
+          parser.outputPath()
+      );
+
+      app.run();
+
+      while (!SignalHandler::shouldStop())
+      {
+          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      }
+      app.shutdown();
+    }
+    else
     {
       std::cerr << "Unknown config type\n";
       return 1;
     }
-    
+
     return 0;
 }

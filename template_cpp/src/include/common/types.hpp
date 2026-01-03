@@ -23,7 +23,8 @@ enum class MessageType : uint8_t {
     BROADCAST_ACK  = 0x12,
     
     PROPOSAL = 0x21,
-    NACK     = 0x22
+    NACK     = 0x22,
+    ACK      = 0x23
 };
 
 struct PerfectLinkConfig 

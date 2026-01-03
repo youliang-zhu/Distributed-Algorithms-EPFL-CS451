@@ -11,6 +11,7 @@ set(SOURCES
     src/network/udp_socket.cpp
     src/perfectlink/perfect_link_app.cpp
     src/fifobroadcast/fifo_broadcast_app.cpp
+    src/lattice/lattice_agreement_app.cpp
 )
 
 # DO NOT EDIT THE FOLLOWING LINES

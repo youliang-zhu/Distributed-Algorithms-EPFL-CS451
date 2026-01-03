@@ -25,11 +25,30 @@ void Logger::logBroadcast(uint32_t seq_number)
     }
 }
 
-void Logger::logDelivery(uint32_t sender_id, uint32_t seq_number) 
+void Logger::logDelivery(uint32_t sender_id, uint32_t seq_number)
 {
     std::lock_guard<std::mutex> lock(mtx_);
     buffer_.push_back("d " + std::to_string(sender_id) + " " + std::to_string(seq_number));
-    if (buffer_.size() >= FLUSH_THRESHOLD) 
+    if (buffer_.size() >= FLUSH_THRESHOLD)
+    {
+        flushInternal();
+    }
+}
+
+void Logger::logDecision(const std::set<uint32_t>& decision_set)
+{
+    std::lock_guard<std::mutex> lock(mtx_);
+
+    std::string line;
+    bool first = true;
+    for (uint32_t val : decision_set) {
+        if (!first) line += " ";
+        line += std::to_string(val);
+        first = false;
+    }
+
+    buffer_.push_back(line);
+    if (buffer_.size() >= FLUSH_THRESHOLD)
     {
         flushInternal();
     }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <mutex>
 #include <cstdint>
+#include <set>
 
 class Logger {
 public:
@@ -15,6 +16,7 @@ public:
 
     void logBroadcast(uint32_t seq_number);
     void logDelivery(uint32_t sender_id, uint32_t seq_number);
+    void logDecision(const std::set<uint32_t>& decision_set);
     void flush();
 
 private:
@@ -22,10 +24,10 @@ private:
 
     std::string output_path_;
     std::vector<std::string> buffer_;
-    static constexpr size_t FLUSH_THRESHOLD = 5; 
+    static constexpr size_t FLUSH_THRESHOLD = 5;
     // 创建锁变量
     std::mutex mtx_;
-    
+
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 };

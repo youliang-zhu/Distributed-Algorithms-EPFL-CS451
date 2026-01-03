@@ -126,7 +126,7 @@ private:
 
     // Auxiliary components
     ProposalRetransmitter retransmitter_;
-    OutputManager output_manager_;
+    OutputManager* output_manager_;
     SlotPipelineManager slot_pipeline_;
 
     // Threads

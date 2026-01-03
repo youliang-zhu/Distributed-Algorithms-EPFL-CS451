@@ -140,7 +140,7 @@ LatticeAgreementApp::LatticeAgreementApp(uint32_t my_id, const std::vector<Host>
                                          const LatticeAgreementConfig& config,
                                          const std::string& output_path)
     : my_id_(my_id), hosts_(hosts), config_(config),
-      retransmitter_(this), output_manager_(new Logger(output_path)),
+      retransmitter_(this), output_manager_(nullptr),
       slot_pipeline_(10, this), running_(false) // Must match declaration order
 {
     n_processes_ = static_cast<uint32_t>(hosts_.size());
@@ -150,11 +150,18 @@ LatticeAgreementApp::LatticeAgreementApp(uint32_t my_id, const std::vector<Host>
     Host my_host = findHost(my_id_);
     logger_ = new Logger(output_path);
 
+    // OutputManager reuses the same Logger instance
+    output_manager_ = new OutputManager(logger_);
+
     socket_ = new UDPSocket(my_host.port);
+
+    std::cerr << "[DEBUG] Process " << my_id_ << " initialized, n=" << n_processes_
+              << ", f=" << f_ << ", majority=" << majority_ << std::endl;
 }
 
 LatticeAgreementApp::~LatticeAgreementApp() {
     shutdown();
+    delete output_manager_;
     delete logger_;
     delete socket_;
 }
@@ -185,11 +192,13 @@ void LatticeAgreementApp::shutdown() {
         receive_thread_.join();
     }
 
-    output_manager_.finalFlush();
+    output_manager_->finalFlush();
     logger_->flush();
 }
 
 void LatticeAgreementApp::propose(uint32_t slot, const std::set<uint32_t>& proposal) {
+    std::cerr << "[DEBUG] Process " << my_id_ << " proposing slot " << slot << std::endl;
+
     std::lock_guard<std::mutex> lock(state_mutex_);
 
     auto& state = proposer_state_[slot];
@@ -312,11 +321,20 @@ void LatticeAgreementApp::startNewIteration(uint32_t slot) {
 void LatticeAgreementApp::decide(uint32_t slot, const std::set<uint32_t>& value) {
     // Note: caller already holds state_mutex_
 
+    std::cerr << "[DEBUG] Process " << my_id_ << " deciding slot " << slot << ": {";
+    bool first = true;
+    for (uint32_t v : value) {
+        if (!first) std::cerr << ", ";
+        std::cerr << v;
+        first = false;
+    }
+    std::cerr << "}" << std::endl;
+
     auto& state = proposer_state_[slot];
     state.active = false; // Stop retransmission
 
     // Record decision
-    output_manager_.recordDecision(slot, value);
+    output_manager_->recordDecision(slot, value);
     decided_slots_.insert(slot);
 
     // Memory cleanup
@@ -335,27 +353,35 @@ bool LatticeAgreementApp::isSlotActive(uint32_t slot) const {
 }
 
 void LatticeAgreementApp::broadcastProposal(uint32_t slot) {
-    std::lock_guard<std::mutex> lock(state_mutex_);
+    uint32_t pn;
+    std::set<uint32_t> proposal_value;
 
-    auto it = proposer_state_.find(slot);
-    if (it == proposer_state_.end() || !it->second.active) return;
+    {
+        std::lock_guard<std::mutex> lock(state_mutex_);
 
-    auto& state = it->second;
-    Packet packet = Packet::createProposalPacket(slot,
-                                                  state.active_proposal_number,
-                                                  my_id_,
-                                                  state.proposed_value);
+        auto it = proposer_state_.find(slot);
+        if (it == proposer_state_.end() || !it->second.active) return;
 
-    // BEB broadcast (not including self)
-    for (const auto& host : hosts_) {
-        if (host.id != my_id_) {
-            try {
-                socket_->send(host.ip, host.port, packet.serialize());
-            } catch (...) {
-                // Ignore send errors
+        auto& state = it->second;
+        pn = state.active_proposal_number;
+        proposal_value = state.proposed_value;
+
+        Packet packet = Packet::createProposalPacket(slot, pn, my_id_, proposal_value);
+
+        // BEB broadcast (not including self)
+        for (const auto& host : hosts_) {
+            if (host.id != my_id_) {
+                try {
+                    socket_->send(host.ip, host.port, packet.serialize());
+                } catch (...) {
+                    // Ignore send errors
+                }
             }
         }
-    }
+    } // Release lock before handling own proposal
+
+    // Process own proposal (as acceptor)
+    handleProposal(slot, pn, my_id_, proposal_value);
 }
 
 void LatticeAgreementApp::sendAck(uint32_t dest_id, uint32_t slot, uint32_t pn) {

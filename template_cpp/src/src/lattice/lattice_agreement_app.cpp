@@ -35,6 +35,7 @@ void ProposalRetransmitter::startRetransmitting(uint32_t slot) {
 void ProposalRetransmitter::retransmitLoop() {
     while (running_) {
         std::vector<uint32_t> to_remove;
+        int retransmit_count = 0;
 
         {
             std::lock_guard<std::mutex> lock(mutex_);
@@ -42,6 +43,7 @@ void ProposalRetransmitter::retransmitLoop() {
             for (uint32_t slot : active_slots_) {
                 if (app_->isSlotActive(slot)) {
                     app_->broadcastProposal(slot);
+                    retransmit_count++;
                 } else {
                     to_remove.push_back(slot);
                 }
@@ -214,33 +216,68 @@ void LatticeAgreementApp::propose(uint32_t slot, const std::set<uint32_t>& propo
 }
 
 void LatticeAgreementApp::handleAck(uint32_t slot, uint32_t pn, uint32_t sender_id) {
-    std::lock_guard<std::mutex> lock(state_mutex_);
+    bool should_decide = false;
+    std::set<uint32_t> decide_value;
+    
+    {
+        std::lock_guard<std::mutex> lock(state_mutex_);
 
-    auto& state = proposer_state_[slot];
+        auto it = proposer_state_.find(slot);
+        if (it == proposer_state_.end()) {
+            std::cerr << "[DEBUG] Process " << my_id_ << " received ACK for slot " << slot 
+                      << " but no proposer state exists" << std::endl;
+            return;
+        }
+        auto& state = it->second;
 
-    // Check: proposal_number match
-    if (pn != state.active_proposal_number) return;
+        // Check: proposal_number match
+        if (pn != state.active_proposal_number) return;
 
-    // Check: already decided
-    if (!state.active) return;
+        // Check: already decided
+        if (!state.active) return;
 
-    // Check: duplicate response
-    if (state.responded_processes_this_iteration.count(sender_id)) return;
+        // Check: duplicate response
+        if (state.responded_processes_this_iteration.count(sender_id)) return;
 
-    // Record response
-    state.responded_processes_this_iteration.insert(sender_id);
-    state.ack_count++;
+        // Record response
+        state.responded_processes_this_iteration.insert(sender_id);
+        state.ack_count++;
 
-    // Check decision condition
-    if (state.ack_count >= majority_) {
-        decide(slot, state.proposed_value);
-        return;
-    }
+        std::cerr << "[DEBUG] Process " << my_id_ << " slot " << slot << " received ACK from " 
+                  << sender_id << ", ack_count=" << state.ack_count << ", majority=" << majority_ << std::endl;
 
-    // Check new iteration condition
-    if (state.nack_count > 0 &&
-        state.ack_count + state.nack_count >= majority_) {
-        startNewIteration(slot);
+        // Check decision condition
+        if (state.ack_count >= majority_) {
+            should_decide = true;
+            decide_value = state.proposed_value;
+            
+            // Mark as inactive and cleanup inside lock
+            state.active = false;
+            output_manager_->recordDecision(slot, decide_value);
+            decided_slots_.insert(slot);
+            decided_values_[slot] = decide_value;
+            proposer_state_.erase(slot);
+            acceptor_state_.erase(slot);
+        }
+        // Check new iteration condition
+        else if (state.nack_count > 0 &&
+            state.ack_count + state.nack_count >= majority_) {
+            startNewIteration(slot);
+        }
+    } // Release state_mutex_ before calling onSlotDecided
+
+    if (should_decide) {
+        std::cerr << "[DEBUG] Process " << my_id_ << " deciding slot " << slot << ": {";
+        bool first = true;
+        for (uint32_t v : decide_value) {
+            if (!first) std::cerr << ", ";
+            std::cerr << v;
+            first = false;
+        }
+        std::cerr << "}" << std::endl;
+        
+        // Notify pipeline manager AFTER releasing state_mutex_
+        slot_pipeline_.onSlotDecided(slot);
     }
 }
 
@@ -287,6 +324,8 @@ void LatticeAgreementApp::handleProposal(uint32_t slot, uint32_t pn, uint32_t se
         // Check if proposed_value contains decided_value
         bool is_subset = std::includes(proposed_value.begin(), proposed_value.end(),
                                         decided_value.begin(), decided_value.end());
+        std::cerr << "[DEBUG] Process " << my_id_ << " already decided slot " << slot 
+                  << ", responding to sender " << sender_id << " with " << (is_subset ? "ACK" : "NACK") << std::endl;
         if (is_subset) {
             sendAck(sender_id, slot, pn);
         } else {

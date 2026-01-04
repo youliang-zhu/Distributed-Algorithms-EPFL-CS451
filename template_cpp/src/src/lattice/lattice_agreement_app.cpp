@@ -281,8 +281,24 @@ void LatticeAgreementApp::handleProposal(uint32_t slot, uint32_t pn, uint32_t se
                                          const std::set<uint32_t>& proposed_value) {
     std::lock_guard<std::mutex> lock(state_mutex_);
 
-    // Check: already decided
-    if (decided_slots_.count(slot)) return;
+    // If already decided, still respond to help other processes
+    if (decided_slots_.count(slot)) {
+        const auto& decided_value = decided_values_[slot];
+        // Check if proposed_value contains decided_value
+        bool is_subset = std::includes(proposed_value.begin(), proposed_value.end(),
+                                        decided_value.begin(), decided_value.end());
+        if (is_subset) {
+            sendAck(sender_id, slot, pn);
+        } else {
+            // Merge and send NACK with the merged value
+            std::set<uint32_t> merged;
+            std::set_union(decided_value.begin(), decided_value.end(),
+                           proposed_value.begin(), proposed_value.end(),
+                           std::inserter(merged, merged.begin()));
+            sendNack(sender_id, slot, pn, merged);
+        }
+        return;
+    }
 
     auto& state = acceptor_state_[slot];
 
@@ -336,6 +352,7 @@ void LatticeAgreementApp::decide(uint32_t slot, const std::set<uint32_t>& value)
     // Record decision
     output_manager_->recordDecision(slot, value);
     decided_slots_.insert(slot);
+    decided_values_[slot] = value;  // Save decided value to respond to late proposals
 
     // Memory cleanup
     proposer_state_.erase(slot);

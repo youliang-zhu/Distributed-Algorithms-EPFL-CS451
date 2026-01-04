@@ -221,11 +221,6 @@ void FIFOBroadcastApp::onPLAck(uint32_t original_sender, uint32_t seq, const std
         urb_ack_list_.erase(msg_id);
         fifoDeliver(original_sender, seq);
     }
-    
-    if (should_deliver) {
-        std::lock_guard<std::mutex> lock(receiver_state_mutex_);
-        fifoDeliver(original_sender, seq);
-    }
 }
 
 void FIFOBroadcastApp::fifoDeliver(uint32_t sender_id, uint32_t seq) 

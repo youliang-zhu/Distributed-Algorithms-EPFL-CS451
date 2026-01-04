@@ -351,11 +351,4 @@ uint32_t PerfectLinkApp::getProcessIdFromAddress(const std::string& ip, uint16_t
     return 0;
 }
 
-uint32_t PerfectLinkApp::getProcessIdFromAddress(const std::string& ip, uint16_t port) const {
-    for (const Host& host : hosts_) {
-        if (host.port == port) return host.id;
-    }
-    return 0;
-}
-
 }

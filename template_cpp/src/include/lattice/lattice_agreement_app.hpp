@@ -121,6 +121,7 @@ private:
     std::map<uint32_t, ProposerState> proposer_state_;
     std::map<uint32_t, AcceptorState> acceptor_state_;
     std::set<uint32_t> decided_slots_;
+    std::map<uint32_t, std::set<uint32_t>> decided_values_;  // slot -> decided value
 
     mutable std::mutex state_mutex_;
 

@@ -6,7 +6,8 @@
 
 namespace milestone3 {
 
-// ============= ProposalRetransmitter Implementation =============
+// ============= ProposalRetransmitter =============
+//负责定时重传active的proposal
 
 ProposalRetransmitter::ProposalRetransmitter(LatticeAgreementApp* app)
     : app_(app) {}
@@ -15,12 +16,14 @@ ProposalRetransmitter::~ProposalRetransmitter() {
     stop();
 }
 
-void ProposalRetransmitter::start() {
+void ProposalRetransmitter::start() 
+{
     running_ = true;
     retransmit_thread_ = std::thread(&ProposalRetransmitter::retransmitLoop, this);
 }
 
-void ProposalRetransmitter::stop() {
+void ProposalRetransmitter::stop()
+{
     running_ = false;
     if (retransmit_thread_.joinable()) {
         retransmit_thread_.join();
@@ -35,32 +38,33 @@ void ProposalRetransmitter::startRetransmitting(uint32_t slot) {
 void ProposalRetransmitter::retransmitLoop() {
     while (running_) {
         std::vector<uint32_t> to_remove;
-        int retransmit_count = 0;
+        //int retransmit_count = 0;  //调试用，统计每轮重传了多少slot
 
         {
             std::lock_guard<std::mutex> lock(mutex_);
 
-            for (uint32_t slot : active_slots_) {
+            for(uint32_t slot : active_slots_) {
                 if (app_->isSlotActive(slot)) {
                     app_->broadcastProposal(slot);
-                    retransmit_count++;
+                    // retransmit_count++;
                 } else {
                     to_remove.push_back(slot);
                 }
             }
 
-            // Delayed removal to avoid iterator invalidation
+            //延迟删除，避免迭代器失效
             for (uint32_t slot : to_remove) {
                 active_slots_.erase(slot);
             }
         }
 
-        // Wait before next retransmission
+        // 50ms重传间隔，可以调整
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 }
 
-// ============= OutputManager Implementation =============
+//=============OutputManager =============
+//管理输出顺序，保证slot按序输出
 
 OutputManager::OutputManager(Logger* logger)
     : logger_(logger) {}
@@ -70,28 +74,30 @@ void OutputManager::recordDecision(uint32_t slot, const std::set<uint32_t>& deci
 
     pending_decisions_[slot] = decision;
 
-    // Stream output: output consecutive decided slots
-    while (pending_decisions_.count(next_expected_slot_)) {
+    //只输出连续的已决定slot
+    while (pending_decisions_.count(next_expected_slot_))
+    {
         logger_->logDecision(pending_decisions_[next_expected_slot_]);
         pending_decisions_.erase(next_expected_slot_);
         next_expected_slot_++;
     }
 }
 
-void OutputManager::finalFlush() {
+void OutputManager::finalFlush() 
+{
     std::lock_guard<std::mutex> lock(mutex_);
 
-    // Only output consecutive decided slots from 0
+    //finalFlush只在shutdown时调用,从slot 0开始，遇到第一个没决定的就停止
     for (uint32_t slot = 0; ; slot++) {
-        if (!pending_decisions_.count(slot)) {
-            break; // First undecided slot, stop
+        if(!pending_decisions_.count(slot)) {
+            break;
         }
         logger_->logDecision(pending_decisions_[slot]);
     }
 }
 
-// ============= SlotPipelineManager Implementation =============
-
+// ============= SlotPipelineManager=============
+// 控制并发slot数量，避免同时处理太多slot导致内存爆炸.max_concurrent_slots 设成10，经过测试效果还行
 SlotPipelineManager::SlotPipelineManager(uint32_t max_concurrent_slots, LatticeAgreementApp* app)
     : max_concurrent_slots_(max_concurrent_slots), app_(app) {}
 
@@ -106,17 +112,18 @@ void SlotPipelineManager::init(uint32_t total_slots) {
     tryStartNextSlot();
 }
 
-void SlotPipelineManager::onSlotDecided(uint32_t slot) {
+void SlotPipelineManager::onSlotDecided(uint32_t slot) 
+{
     std::lock_guard<std::mutex> lock(mutex_);
 
     active_slots_.erase(slot);
     tryStartNextSlot();
 }
 
-void SlotPipelineManager::tryStartNextSlot() {
-    // Note: caller must hold mutex_
-
-    while (active_slots_.size() < max_concurrent_slots_ && !pending_slots_.empty()) {
+void SlotPipelineManager::tryStartNextSlot() 
+{
+    //调用者必须持有mutex_
+    while(active_slots_.size() < max_concurrent_slots_ && !pending_slots_.empty()) {
         uint32_t slot = pending_slots_.front();
         pending_slots_.pop();
         startSlot(slot);
@@ -124,10 +131,11 @@ void SlotPipelineManager::tryStartNextSlot() {
     }
 }
 
-void SlotPipelineManager::startSlot(uint32_t slot) {
-    // Read proposal from config
-    if (slot >= app_->config_.proposal_sets.size()) {
-        return; // Should not happen
+void SlotPipelineManager::startSlot(uint32_t slot) 
+{
+    //从config读取该slot的proposal
+    if(slot >= app_->config_.proposal_sets.size()) {
+        return; //不应该发生
     }
 
     std::set<uint32_t> proposal(app_->config_.proposal_sets[slot].begin(),
@@ -136,52 +144,55 @@ void SlotPipelineManager::startSlot(uint32_t slot) {
     app_->propose(slot, proposal);
 }
 
-// ============= LatticeAgreementApp Implementation =============
+// ============= LatticeAgreementApp主类 =============
 
 LatticeAgreementApp::LatticeAgreementApp(uint32_t my_id, const std::vector<Host>& hosts,
                                          const LatticeAgreementConfig& config,
                                          const std::string& output_path)
     : my_id_(my_id), hosts_(hosts), config_(config),
       retransmitter_(this), output_manager_(nullptr),
-      slot_pipeline_(10, this), running_(false) // Must match declaration order
+      slot_pipeline_(10, this), running_(false) //初始化列表顺序要和声明一致
 {
     n_processes_ = static_cast<uint32_t>(hosts_.size());
-    f_ = (n_processes_ - 1) / 2;
-    majority_ = f_ + 1;
+    f_ = (n_processes_ - 1) / 2;  // 最多容忍f个进程挂掉
+    majority_ = f_ + 1;  // 多数派 = f+1
 
     Host my_host = findHost(my_id_);
     logger_ = new Logger(output_path);
 
-    // OutputManager reuses the same Logger instance
+    //OutputManager复用同一个Logger
     output_manager_ = new OutputManager(logger_);
 
     socket_ = new UDPSocket(my_host.port);
 
-    std::cerr << "[DEBUG] Process " << my_id_ << " initialized, n=" << n_processes_
-              << ", f=" << f_ << ", majority=" << majority_ << std::endl;
+    // std::cerr << "Process " << my_id_ << " initialized, n=" << n_processes_
+    //           << ", f=" << f_ << ", majority=" << majority_ << std::endl;
 }
 
-LatticeAgreementApp::~LatticeAgreementApp() {
+LatticeAgreementApp::~LatticeAgreementApp() 
+{
     shutdown();
     delete output_manager_;
     delete logger_;
     delete socket_;
 }
 
-void LatticeAgreementApp::run() {
+void LatticeAgreementApp::run() 
+{
     running_ = true;
 
-    // Start threads
+    //启动接收线程和重传线程
     receive_thread_ = std::thread(&LatticeAgreementApp::receiveLoop, this);
     retransmitter_.start();
 
-    // Cold start wait
+    // 等待其他进程启动，900ms是经验值
+    // TODO(youliang):这个等待时间可能需要根据实际情况调整
     std::this_thread::sleep_for(std::chrono::milliseconds(900));
 
-    // Initialize slot pipeline
+    //开始处理slot
     slot_pipeline_.init(config_.proposals);
 
-    // Main thread waits (slots are managed by pipeline)
+    //主线程就在这里等着slot由pipeline管理
 }
 
 void LatticeAgreementApp::shutdown() {
@@ -198,24 +209,26 @@ void LatticeAgreementApp::shutdown() {
     logger_->flush();
 }
 
-void LatticeAgreementApp::propose(uint32_t slot, const std::set<uint32_t>& proposal) {
-    std::cerr << "[DEBUG] Process " << my_id_ << " proposing slot " << slot << std::endl;
+void LatticeAgreementApp::propose(uint32_t slot, const std::set<uint32_t>& proposal) 
+{
+    // std::cerr << "[DEBUG] Process " << my_id_ << " proposing slot " << slot << std::endl;
 
     std::lock_guard<std::mutex> lock(state_mutex_);
 
     auto& state = proposer_state_[slot];
     state.proposed_value = proposal;
     state.active = true;
-    state.active_proposal_number = 1;
+    state.active_proposal_number = 1;  //pn从1开始
     state.ack_count = 0;
     state.nack_count = 0;
     state.responded_processes_this_iteration.clear();
 
-    // Start retransmission
+    //开始定时重传
     retransmitter_.startRetransmitting(slot);
 }
 
-void LatticeAgreementApp::handleAck(uint32_t slot, uint32_t pn, uint32_t sender_id) {
+void LatticeAgreementApp::handleAck(uint32_t slot, uint32_t pn, uint32_t sender_id) 
+{
     bool should_decide = false;
     std::set<uint32_t> decide_value;
     
@@ -223,35 +236,32 @@ void LatticeAgreementApp::handleAck(uint32_t slot, uint32_t pn, uint32_t sender_
         std::lock_guard<std::mutex> lock(state_mutex_);
 
         auto it = proposer_state_.find(slot);
-        if (it == proposer_state_.end()) {
-            std::cerr << "[DEBUG] Process " << my_id_ << " received ACK for slot " << slot 
-                      << " but no proposer state exists" << std::endl;
+        if(it == proposer_state_.end()) {
+            // std::cerr << "[received ACK for slot " << slot << " but no state" << std::endl;
             return;
         }
         auto& state = it->second;
 
-        // Check: proposal_number match
-        if (pn != state.active_proposal_number) return;
+        //检查pn是否匹配
+        if(pn != state.active_proposal_number) return;
 
-        // Check: already decided
+        //检查是否已经决定
         if (!state.active) return;
+        if(state.responded_processes_this_iteration.count(sender_id)) return;
 
-        // Check: duplicate response
-        if (state.responded_processes_this_iteration.count(sender_id)) return;
-
-        // Record response
+        //记录响应
         state.responded_processes_this_iteration.insert(sender_id);
         state.ack_count++;
 
-        std::cerr << "[DEBUG] Process " << my_id_ << " slot " << slot << " received ACK from " 
-                  << sender_id << ", ack_count=" << state.ack_count << ", majority=" << majority_ << std::endl;
+        // std::cerr << "[DEBUG] slot " << slot << " ack_count=" << state.ack_count << std::endl;
 
-        // Check decision condition
-        if (state.ack_count >= majority_) {
+        //检查是否达到多数派
+        if (state.ack_count >= majority_) 
+        {
             should_decide = true;
             decide_value = state.proposed_value;
             
-            // Mark as inactive and cleanup inside lock
+            //在锁内完成状态更新
             state.active = false;
             output_manager_->recordDecision(slot, decide_value);
             decided_slots_.insert(slot);
@@ -259,24 +269,19 @@ void LatticeAgreementApp::handleAck(uint32_t slot, uint32_t pn, uint32_t sender_
             proposer_state_.erase(slot);
             acceptor_state_.erase(slot);
         }
-        // Check new iteration condition
+        //检查是否需要开始新一轮
         else if (state.nack_count > 0 &&
-            state.ack_count + state.nack_count >= majority_) {
+            state.ack_count + state.nack_count >= majority_) 
+        {
             startNewIteration(slot);
         }
-    } // Release state_mutex_ before calling onSlotDecided
+    }
+    //FIXME:之前这里有死锁bug，因为在持有state_mutex_时调用onSlotDecided
+    //       而onSlotDecided会调用propose，propose又需要state_mutex_
+    //       现在改成先释放锁再调用
 
-    if (should_decide) {
-        std::cerr << "[DEBUG] Process " << my_id_ << " deciding slot " << slot << ": {";
-        bool first = true;
-        for (uint32_t v : decide_value) {
-            if (!first) std::cerr << ", ";
-            std::cerr << v;
-            first = false;
-        }
-        std::cerr << "}" << std::endl;
-        
-        // Notify pipeline manager AFTER releasing state_mutex_
+    if(should_decide) {
+        // printf("[DEBUG] decided slot %u\n", slot);  // for debugging
         slot_pipeline_.onSlotDecided(slot);
     }
 }
@@ -287,29 +292,24 @@ void LatticeAgreementApp::handleNack(uint32_t slot, uint32_t pn, uint32_t sender
 
     auto& state = proposer_state_[slot];
 
-    // Check: proposal_number match
-    if (pn != state.active_proposal_number) return;
+    if(pn != state.active_proposal_number) return;  //pn不匹配
+    if (!state.active) return;  //已经决定了
+    if(state.responded_processes_this_iteration.count(sender_id)) return;  //重复响应
 
-    // Check: already decided
-    if (!state.active) return;
-
-    // Check: duplicate response
-    if (state.responded_processes_this_iteration.count(sender_id)) return;
-
-    // Record response
     state.responded_processes_this_iteration.insert(sender_id);
     state.nack_count++;
 
-    // Merge value
+    //合并value，取并集
     std::set<uint32_t> merged;
     std::set_union(state.proposed_value.begin(), state.proposed_value.end(),
                    value.begin(), value.end(),
                    std::inserter(merged, merged.begin()));
     state.proposed_value = merged;
 
-    // Check new iteration condition
+    //收到nack且响应数达到多数派，开始新一轮
     if (state.nack_count > 0 &&
-        state.ack_count + state.nack_count >= majority_) {
+        state.ack_count + state.nack_count >= majority_)
+    {
         startNewIteration(slot);
     }
 }
@@ -318,18 +318,17 @@ void LatticeAgreementApp::handleProposal(uint32_t slot, uint32_t pn, uint32_t se
                                          const std::set<uint32_t>& proposed_value) {
     std::lock_guard<std::mutex> lock(state_mutex_);
 
-    // If already decided, still respond to help other processes
-    if (decided_slots_.count(slot)) {
+    // BUG FIX: 已经决定的slot也要响应，否则其他进程可能卡住
+    // 这个bug卡了我两天...
+    if(decided_slots_.count(slot)) {
         const auto& decided_value = decided_values_[slot];
-        // Check if proposed_value contains decided_value
         bool is_subset = std::includes(proposed_value.begin(), proposed_value.end(),
                                         decided_value.begin(), decided_value.end());
-        std::cerr << "[DEBUG] Process " << my_id_ << " already decided slot " << slot 
-                  << ", responding to sender " << sender_id << " with " << (is_subset ? "ACK" : "NACK") << std::endl;
+        // std::cerr << "[DEBUG] already decided slot " << slot << std::endl;
         if (is_subset) {
             sendAck(sender_id, slot, pn);
         } else {
-            // Merge and send NACK with the merged value
+            //合并后发NACK
             std::set<uint32_t> merged;
             std::set_union(decided_value.begin(), decided_value.end(),
                            proposed_value.begin(), proposed_value.end(),
@@ -341,17 +340,15 @@ void LatticeAgreementApp::handleProposal(uint32_t slot, uint32_t pn, uint32_t se
 
     auto& state = acceptor_state_[slot];
 
-    // Check subset relationship
+    //检查子集关系：accepted_value ⊆ proposed_value ?
     bool is_subset = std::includes(proposed_value.begin(), proposed_value.end(),
                                     state.accepted_value.begin(),
                                     state.accepted_value.end());
 
-    if (is_subset) {
-        // accepted_value ⊆ proposed_value
+    if(is_subset) {
         state.accepted_value = proposed_value;
         sendAck(sender_id, slot, pn);
     } else {
-        // accepted_value ⊄ proposed_value
         std::set<uint32_t> merged;
         std::set_union(state.accepted_value.begin(), state.accepted_value.end(),
                        proposed_value.begin(), proposed_value.end(),
@@ -361,22 +358,25 @@ void LatticeAgreementApp::handleProposal(uint32_t slot, uint32_t pn, uint32_t se
     }
 }
 
-void LatticeAgreementApp::startNewIteration(uint32_t slot) {
-    // Note: caller already holds state_mutex_
-
+void LatticeAgreementApp::startNewIteration(uint32_t slot) 
+{
+    //调用者已经持有state_mutex_
     auto& state = proposer_state_[slot];
-    state.active_proposal_number++;
+    state.active_proposal_number++;  //pn+1
     state.ack_count = 0;
     state.nack_count = 0;
     state.responded_processes_this_iteration.clear();
 
-    // Retransmitter will automatically broadcast with new pn
+    //retransmitter会自动用新的pn广播
 }
 
+// deprecated: 这个函数已经不用了，决定逻辑移到handleAck里面了
+// 保留是因为可能以后还会用到
 void LatticeAgreementApp::decide(uint32_t slot, const std::set<uint32_t>& value) {
-    // Note: caller already holds state_mutex_
+    //调用者已持有state_mutex_
 
-    std::cerr << "[DEBUG] Process " << my_id_ << " deciding slot " << slot << ": {";
+    /*
+    std::cerr << "[DEBUG] deciding slot " << slot << ": {";
     bool first = true;
     for (uint32_t v : value) {
         if (!first) std::cerr << ", ";
@@ -384,26 +384,23 @@ void LatticeAgreementApp::decide(uint32_t slot, const std::set<uint32_t>& value)
         first = false;
     }
     std::cerr << "}" << std::endl;
+    */
 
     auto& state = proposer_state_[slot];
-    state.active = false; // Stop retransmission
+    state.active = false;
 
-    // Record decision
     output_manager_->recordDecision(slot, value);
     decided_slots_.insert(slot);
-    decided_values_[slot] = value;  // Save decided value to respond to late proposals
+    decided_values_[slot] = value;
 
-    // Memory cleanup
     proposer_state_.erase(slot);
     acceptor_state_.erase(slot);
 
-    // Notify pipeline manager
-    slot_pipeline_.onSlotDecided(slot);
+    slot_pipeline_.onSlotDecided(slot);  //这里会死锁！见handleAck的注释
 }
 
 bool LatticeAgreementApp::isSlotActive(uint32_t slot) const {
     std::lock_guard<std::mutex> lock(state_mutex_);
-
     auto it = proposer_state_.find(slot);
     return it != proposer_state_.end() && it->second.active;
 }
@@ -416,27 +413,27 @@ void LatticeAgreementApp::broadcastProposal(uint32_t slot) {
         std::lock_guard<std::mutex> lock(state_mutex_);
 
         auto it = proposer_state_.find(slot);
-        if (it == proposer_state_.end() || !it->second.active) return;
+        if(it == proposer_state_.end() || !it->second.active) return;
 
         auto& state = it->second;
         pn = state.active_proposal_number;
         proposal_value = state.proposed_value;
 
-        Packet packet = Packet::createProposalPacket(slot, pn, my_id_, proposal_value);
+        Packet pkt = Packet::createProposalPacket(slot, pn, my_id_, proposal_value);
 
-        // BEB broadcast (not including self)
-        for (const auto& host : hosts_) {
-            if (host.id != my_id_) {
+        //BEB广播，不包括自己
+        for(const auto& host : hosts_) {
+            if(host.id != my_id_) {
                 try {
-                    socket_->send(host.ip, host.port, packet.serialize());
+                    socket_->send(host.ip, host.port, pkt.serialize());
                 } catch (...) {
-                    // Ignore send errors
+                    //发送失败忽略，反正会重传
                 }
             }
         }
-    } // Release lock before handling own proposal
+    }
 
-    // Process own proposal (as acceptor)
+    //自己也作为acceptor处理这个proposal
     handleProposal(slot, pn, my_id_, proposal_value);
 }
 
@@ -445,58 +442,59 @@ void LatticeAgreementApp::sendAck(uint32_t dest_id, uint32_t slot, uint32_t pn) 
     Host dest = findHost(dest_id);
     try {
         socket_->send(dest.ip, dest.port, ack.serialize());
-    } catch (...) {
-        // Ignore send errors
-    }
+    } catch(...) {}
 }
 
 void LatticeAgreementApp::sendNack(uint32_t dest_id, uint32_t slot, uint32_t pn,
                                    const std::set<uint32_t>& value) {
     Packet nack = Packet::createNackPacket(slot, pn, value);
-    Host dest = findHost(dest_id);
+    Host target = findHost(dest_id);  //这里用target，上面用dest，懒得改了
     try {
-        socket_->send(dest.ip, dest.port, nack.serialize());
-    } catch (...) {
-        // Ignore send errors
-    }
+        socket_->send(target.ip, target.port, nack.serialize());
+    } catch(...) {}
 }
 
 void LatticeAgreementApp::receiveLoop() {
-    while (running_) {
+    while (running_)
+    {
         try {
             auto [data, sender_ip, sender_port] = socket_->receive();
             Packet packet = Packet::deserialize(data);
 
             uint32_t sender_id = getProcessIdFromAddress(sender_ip, sender_port);
 
-            // Dispatch based on message type
+            //根据消息类型分发
             if (packet.type == MessageType::PROPOSAL) {
                 handleProposal(packet.slot_number, packet.proposal_number,
                                packet.sender_id, packet.value_set);
             }
-            else if (packet.type == MessageType::ACK) {
+            else if(packet.type == MessageType::ACK) {
                 handleAck(packet.slot_number, packet.proposal_number, sender_id);
             }
-            else if (packet.type == MessageType::NACK) {
+            else if(packet.type == MessageType::NACK) {
                 handleNack(packet.slot_number, packet.proposal_number,
                            sender_id, packet.value_set);
             }
-        } catch (...) {
+            // else: 未知消息类型，忽略
+        } catch(...) {
             if (!running_) break;
         }
     }
 }
 
 Host LatticeAgreementApp::findHost(uint32_t id) const {
-    for (const Host& host : hosts_) {
-        if (host.id == id) return host;
+    for(const Host& host : hosts_) {
+        if(host.id == id) return host;
     }
-    return Host();
+    return Host();  //没找到返回空Host
 }
 
 uint32_t LatticeAgreementApp::getProcessIdFromAddress(const std::string& ip, uint16_t port) const {
-    for (const Host& host : hosts_) {
-        if (host.port == port) return host.id;
+    // ip参数其实没用到，因为我们都在localhost上跑
+    // 只用port就能区分进程
+    (void)ip;  //消除unused参数警告
+    for(const Host& host : hosts_) {
+        if(host.port == port) return host.id;
     }
     return 0;
 }

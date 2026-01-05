@@ -25,6 +25,15 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$SCRIPT_DIR/../.."
 BIN_PATH="$PROJECT_ROOT/bin/da_proc"
 TEST_DIR="$SCRIPT_DIR/test_runs"
+TOOLS_DIR="$PROJECT_ROOT/../../tools"
+
+# Stress test configuration
+STRESS_ENABLED=1           # Enable process interference (SIGSTOP/SIGCONT)
+TC_ENABLED=0               # Enable network delay/loss (requires sudo)
+STRESS_ATTEMPTS=20         # Number of interference attempts
+STRESS_STOP_RATIO=48       # Percentage chance of SIGSTOP
+STRESS_CONT_RATIO=48       # Percentage chance of SIGCONT  
+STRESS_TERM_RATIO=4        # Percentage chance of SIGTERM (limited to minority)
 
 # Colors for output
 RED='\033[0;31m'
@@ -171,18 +180,28 @@ verify_validity() {
     local n_processes=$2
     local -n proposals_ref=$3
 
+    local n_proposals=${#proposals_ref[@]}
+
     for ((i=1; i<=n_processes; i++)); do
         local output_file="$test_path/output/${i}.output"
-        local line_num=1
+        local line_num=0
 
         while IFS= read -r decision_line; do
+            # Get proposal for this slot (all processes use same proposal per slot)
+            if [ $line_num -ge $n_proposals ]; then
+                log_error "Process $i has more output lines than proposals"
+                return 1
+            fi
+            
             local decision_set=($decision_line)
-            local proposal_set=(${proposals_ref[$((i-1))]})
+            local proposal_set=(${proposals_ref[$line_num]})
 
             # Check: proposal ⊆ decision
             for val in "${proposal_set[@]}"; do
                 if [[ ! " ${decision_set[@]} " =~ " ${val} " ]]; then
-                    log_error "Process $i, slot $((line_num-1)): decision does not contain proposal value $val"
+                    log_error "Process $i, slot $line_num: decision does not contain proposal value $val"
+                    log_error "  Proposal: ${proposals_ref[$line_num]}"
+                    log_error "  Decision: $decision_line"
                     return 1
                 fi
             done
@@ -201,7 +220,7 @@ verify_consistency() {
 
     for ((slot=0; slot<n_proposals; slot++)); do
         # Collect all decisions for this slot
-        local -a all_decisions
+        local -a all_decisions=()  # Clear array at start of each slot
         for ((i=1; i<=n_processes; i++)); do
             local output_file="$test_path/output/${i}.output"
             local decision_line=$(sed -n "$((slot+1))p" "$output_file")
@@ -319,7 +338,9 @@ test_layer_2_dual() {
     local n_processes=2
 
     create_hosts_file "$test_path" $n_processes
-    create_config_file "$test_path" "1" "2"
+    # Single slot where both processes propose different values
+    # All processes share the same config, so they all propose "1 2" for slot 0
+    create_config_file "$test_path" "1 2"
 
     log_info "Starting $n_processes processes with different proposals..."
     local pids=()
@@ -336,7 +357,8 @@ test_layer_2_dual() {
         return 1
     fi
 
-    local proposals=("1" "2")
+    # Both processes propose "1 2", so validity check: decision must contain 1 and 2
+    local proposals=("1 2" "1 2")
     if ! verify_validity "$test_path" $n_processes proposals; then
         log_error "Layer 2 FAILED: Validity check failed"
         return 1
@@ -362,7 +384,8 @@ test_layer_3_tri() {
     local n_processes=3
 
     create_hosts_file "$test_path" $n_processes
-    create_config_file "$test_path" "1" "2" "3"
+    # Single slot where all 3 processes propose "1 2 3"
+    create_config_file "$test_path" "1 2 3"
 
     log_info "Starting $n_processes processes with different proposals..."
     local pids=()
@@ -379,7 +402,7 @@ test_layer_3_tri() {
         return 1
     fi
 
-    local proposals=("1" "2" "3")
+    local proposals=("1 2 3" "1 2 3" "1 2 3")
     if ! verify_validity "$test_path" $n_processes proposals; then
         log_error "Layer 3 FAILED: Validity check failed"
         return 1
@@ -451,12 +474,12 @@ test_layer_4_multi_slot() {
 
 test_layer_5_stress() {
     log_info "========================================"
-    log_info "Layer 5: Stress Test"
+    log_info "Layer 5: Stress Test with Interference"
     log_info "========================================"
 
     local test_path=$(setup_test_dir "layer5_stress")
     local n_processes=5
-    local n_proposals=50
+    local n_proposals=20
 
     create_hosts_file "$test_path" $n_processes
 
@@ -469,14 +492,131 @@ test_layer_5_stress() {
 
     create_config_file "$test_path" "${proposals[@]}"
 
+    # Setup network interference using tc.py (if enabled and available)
+    local tc_pid=""
+    if [ $TC_ENABLED -eq 1 ]; then
+        if [ -f "$TOOLS_DIR/tc.py" ]; then
+            log_info "Setting up network delay/loss/reordering..."
+            # Start tc.py in background with a timeout
+            python3 -c "
+import sys
+sys.path.insert(0, '$TOOLS_DIR')
+from tc import TC
+config = {
+    'delay': ('50ms', '20ms'),
+    'loss': ('5%', '10%'),
+    'reordering': ('10%', '20%')
+}
+tc = TC(config, needSudo=True, sudoPassword='')
+import time
+time.sleep(60)  # Keep running for test duration
+" &
+            tc_pid=$!
+            sleep 1
+            log_info "Network interference enabled (PID: $tc_pid)"
+        else
+            log_warning "tc.py not found, skipping network interference"
+        fi
+    fi
+
     log_info "Starting $n_processes processes with $n_proposals proposals..."
     local pids=()
+    local pid_array=()
     for ((i=1; i<=n_processes; i++)); do
         local pid=$(start_process "$test_path" $i $TIMEOUT_STRESS)
         pids+=($pid)
+        pid_array+=($pid)
     done
 
-    wait_and_signal "${pids[@]}" 30
+    # Give processes time to start
+    sleep 2
+
+    # Apply stress interference (SIGSTOP/SIGCONT) if enabled
+    if [ $STRESS_ENABLED -eq 1 ]; then
+        log_info "Starting process interference (SIGSTOP/SIGCONT)..."
+        
+        # Calculate max terminatable processes (must keep majority alive)
+        local max_term=$(( (n_processes - 1) / 2 ))
+        local terminated_count=0
+        local terminated_pids=()
+        
+        for ((attempt=1; attempt<=STRESS_ATTEMPTS; attempt++)); do
+            # Random delay between attempts (50-500ms)
+            sleep 0.$((RANDOM % 450 + 50))
+            
+            # Select random process (that's not terminated)
+            local available_indices=()
+            for ((i=0; i<${#pid_array[@]}; i++)); do
+                local is_terminated=0
+                for term_pid in "${terminated_pids[@]}"; do
+                    if [ "${pid_array[$i]}" == "$term_pid" ]; then
+                        is_terminated=1
+                        break
+                    fi
+                done
+                if [ $is_terminated -eq 0 ]; then
+                    available_indices+=($i)
+                fi
+            done
+            
+            if [ ${#available_indices[@]} -eq 0 ]; then
+                break
+            fi
+            
+            local target_idx=${available_indices[$((RANDOM % ${#available_indices[@]}))]}
+            local target_pid=${pid_array[$target_idx]}
+            local target_proc=$((target_idx + 1))
+            
+            # Check if process is still running
+            if ! kill -0 $target_pid 2>/dev/null; then
+                continue
+            fi
+            
+            # Select action based on configured ratios
+            local action_roll=$((RANDOM % 100))
+            
+            if [ $action_roll -lt $STRESS_STOP_RATIO ]; then
+                # SIGSTOP
+                kill -SIGSTOP $target_pid 2>/dev/null && \
+                    log_info "  [Stress $attempt] SIGSTOP -> Process $target_proc (PID: $target_pid)"
+            elif [ $action_roll -lt $((STRESS_STOP_RATIO + STRESS_CONT_RATIO)) ]; then
+                # SIGCONT
+                kill -SIGCONT $target_pid 2>/dev/null && \
+                    log_info "  [Stress $attempt] SIGCONT -> Process $target_proc (PID: $target_pid)"
+            else
+                # SIGTERM (only if we haven't terminated too many)
+                if [ $terminated_count -lt $max_term ]; then
+                    kill -SIGTERM $target_pid 2>/dev/null && {
+                        log_warning "  [Stress $attempt] SIGTERM -> Process $target_proc (PID: $target_pid)"
+                        terminated_pids+=($target_pid)
+                        ((terminated_count++))
+                    }
+                else
+                    # Fall back to SIGSTOP if can't terminate more
+                    kill -SIGSTOP $target_pid 2>/dev/null && \
+                        log_info "  [Stress $attempt] SIGSTOP -> Process $target_proc (fallback)"
+                fi
+            fi
+        done
+        
+        log_info "Stress interference complete. Resuming all stopped processes..."
+        
+        # Resume all stopped processes
+        for pid in "${pid_array[@]}"; do
+            kill -SIGCONT $pid 2>/dev/null || true
+        done
+    fi
+
+    # Wait for processes to complete
+    log_info "Waiting for processes to complete..."
+    wait_and_signal "${pids[@]}" 25
+
+    # Cleanup tc.py if it was started
+    if [ -n "$tc_pid" ] && kill -0 $tc_pid 2>/dev/null; then
+        log_info "Cleaning up network interference..."
+        kill $tc_pid 2>/dev/null || true
+        wait $tc_pid 2>/dev/null || true
+    fi
 
     log_info "Verifying outputs..."
     if ! check_output_exists "$test_path" $n_processes; then
@@ -491,7 +631,7 @@ test_layer_5_stress() {
 
     verify_termination "$test_path" $n_processes $n_proposals
 
-    log_success "Layer 5 PASSED"
+    log_success "Layer 5 PASSED (with stress interference)"
     return 0
 }
 
